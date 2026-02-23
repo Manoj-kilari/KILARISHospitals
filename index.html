@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KILARI'S Hospitals – Best Multispeciality Hospital in India</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <!-- ── EMERGENCY TOPBAR ── -->
+    <div id="topbar">
+        <div class="topbar-links">
+            <a href="#">Find a Doctor</a>
+            <a href="#">Find a Hospital</a>
+            <a href="#">Book Lab Test</a>
+            <a href="#">Health Records</a>
+            <a href="#">Insurance</a>
+        </div>
+        <div class="topbar-right">
+            <span class="topbar-phone">📞 1800-103-0009 &nbsp;|&nbsp; Emergency: 104</span>
+            <button class="emergency-btn">🚨 Emergency</button>
+        </div>
+    </div>
+
+    <!-- ── NAVBAR ── -->
+    <nav>
+        <div class="logo-wrap">
+            <div class="logo-icon"></div>
+            <div>
+                <div class="logo-name">KILARI'S Hospitals</div>
+                <div class="logo-tagline">Touching Lives · Caring Always</div>
+            </div>
+        </div>
+        <div class="nav-menu">
+            <a href="#" class="nav-link active">Home</a>
+            <a href="#departments" class="nav-link">Specialities</a>
+            <a href="#doctors" class="nav-link">Doctors</a>
+            <a href="#blood" class="nav-link">Lab Tests</a>
+            <a href="#locations" class="nav-link">Locations</a>
+            <a href="#" class="nav-link">Health Plans</a>
+            <a href="#" class="nav-link">About Us</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-login" onclick="openPlatform('patient')">Patient Login</button>
+            <button class="btn-book" onclick="openPlatform('patient')">Book Appointment</button>
+        </div>
+    </nav>
+
+    <!-- ── HERO ── -->
+    <section class="hero">
+        <div class="hero-left">
+            <div class="hero-badge">
+                <div class="hero-badge-dot"></div>
+                <span>India's Most Trusted Healthcare Network</span>
+            </div>
+            <h1 class="hero-h1">World-Class Care,<br><em>Close to You.</em></h1>
+            <p class="hero-p">KILARI'S Hospitals brings together 1,200+ specialists, 70+ advanced diagnostic centres,
+                and 25 years of medical excellence — all committed to your health and healing.</p>
+            <div class="hero-actions">
+                <button class="hero-btn-primary" onclick="openPlatform('patient')">📅 Book Appointment</button>
+                <button class="hero-btn-outline" onclick="openPlatform('patient')">🩸 Book Lab Test at Home</button>
+            </div>
+            <div class="hero-stats">
+                <div class="hstat"><span class="hstat-num">25<span>+</span></span><span class="hstat-label">Years of
+                        Excellence</span></div>
+                <div class="hero-divider"></div>
+                <div class="hstat"><span class="hstat-num">12<span>k+</span></span><span class="hstat-label">Daily
+                        Patients</span></div>
+                <div class="hero-divider"></div>
+                <div class="hstat"><span class="hstat-num">1200<span>+</span></span><span
+                        class="hstat-label">Specialists</span></div>
+                <div class="hero-divider"></div>
+                <div class="hstat"><span class="hstat-num">98<span>%</span></span><span class="hstat-label">Satisfaction
+                        Rate</span></div>
+            </div>
+        </div>
+        <div class="hero-right">
+            <div class="hero-visual">
+                <div class="hero-float-1">
+                    <div class="hf-num">4.9 ★</div>
+                    <div class="hf-label">Patient Rating</div>
+                </div>
+                <div class="hero-main-card">
+                    <div class="hero-card-top">
+                        <div class="hc-avatar">👨‍⚕️</div>
+                        <div>
+                            <div class="hc-info-name">Dr. Arjun Mehta</div>
+                            <div class="hc-info-spec">Interventional Cardiologist · 18 yrs</div>
+                        </div>
+                        <span class="hc-status">● Available Today</span>
+                    </div>
+                    <div
+                        style="font-size:.75rem;color:rgba(255,255,255,.45);margin-bottom:.75rem;letter-spacing:.08em;text-transform:uppercase;">
+                        Available Slots — Today</div>
+                    <div class="hero-slots">
+                        <div class="slot">10:00 AM</div>
+                        <div class="slot sel">11:30 AM</div>
+                        <div class="slot">2:00 PM</div>
+                        <div class="slot">3:30 PM</div>
+                        <div class="slot">4:00 PM</div>
+                        <div class="slot">5:00 PM</div>
+                    </div>
+                    <button
+                        style="width:100%;margin-top:1rem;background:var(--blue2);color:#fff;border:none;padding:.75rem;border-radius:8px;font-size:.85rem;font-weight:600;"
+                        onclick="openPlatform('patient')">Confirm Appointment</button>
+                </div>
+                <div class="hero-float-2">
+                    <div class="hf2-icon">🏠</div>
+                    <div>
+                        <div class="hf2-title">Home Blood Collection</div>
+                        <div class="hf2-sub">Starts at ₹299 · Reports in 24hrs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── TICKER ── -->
+    <div class="ticker">
+        <div class="ticker-item">🏆 Ranked #1 Hospital Network in India 2024</div>
+        <div class="ticker-item">🆕 New Robotic Surgery Centre Open in Hyderabad</div>
+        <div class="ticker-item">💉 Free Health Camps every Sunday · Register Now</div>
+        <div class="ticker-item">🔬 NABL Accredited Labs · Results in 4–24 Hours</div>
+        <div class="ticker-item">🌐 45 Hospitals · 200+ Clinics Across India</div>
+    </div>
+
+    <!-- ── SPECIALITIES ── -->
+    <section class="specialties" id="departments">
+        <div class="sec-header">
+            <div>
+                <div class="sec-eyebrow">What We Treat</div>
+                <h2 class="sec-title">Our Medical <span>Specialities</span></h2>
+                <p class="sec-sub">Covering 40+ specialities with expert doctors, cutting-edge technology, and
+                    compassionate care.</p>
+            </div>
+            <a href="#" class="see-all">View All Specialities →</a>
+        </div>
+        <div class="spec-grid">
+            <div class="spec-card"><span class="spec-icon">❤️</span>
+                <div class="spec-name">Cardiology</div>
+                <div class="spec-count">85 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🧠</span>
+                <div class="spec-name">Neurology</div>
+                <div class="spec-count">62 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🦴</span>
+                <div class="spec-name">Orthopedics</div>
+                <div class="spec-count">74 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🔬</span>
+                <div class="spec-name">Oncology</div>
+                <div class="spec-count">90 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🫁</span>
+                <div class="spec-name">Pulmonology</div>
+                <div class="spec-count">41 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">👶</span>
+                <div class="spec-name">Pediatrics</div>
+                <div class="spec-count">58 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">👁️</span>
+                <div class="spec-name">Ophthalmology</div>
+                <div class="spec-count">35 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🦷</span>
+                <div class="spec-name">Dental</div>
+                <div class="spec-count">48 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🧬</span>
+                <div class="spec-name">Genetics</div>
+                <div class="spec-count">22 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">💊</span>
+                <div class="spec-name">Endocrinology</div>
+                <div class="spec-count">30 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🫀</span>
+                <div class="spec-name">Transplants</div>
+                <div class="spec-count">18 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🧘</span>
+                <div class="spec-name">Psychiatry</div>
+                <div class="spec-count">44 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🩻</span>
+                <div class="spec-name">Radiology</div>
+                <div class="spec-count">55 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🩺</span>
+                <div class="spec-name">General Medicine</div>
+                <div class="spec-count">120 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">💆</span>
+                <div class="spec-name">Dermatology</div>
+                <div class="spec-count">38 Doctors</div>
+            </div>
+            <div class="spec-card"><span class="spec-icon">🤱</span>
+                <div class="spec-name">Gynaecology</div>
+                <div class="spec-count">66 Doctors</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── WHY US ── -->
+    <section style="background:#fff;padding:5rem 5%;">
+        <div class="why-grid">
+            <div class="why-visual">
+                <div class="why-main-img">
+                    <div class="why-img-pattern"></div>
+                    <div class="why-big-num">25</div>
+                    <div class="why-stats-grid">
+                        <div class="why-stat">
+                            <div class="why-stat-num">500+</div>
+                            <div class="why-stat-label">Beds across specialised wards</div>
+                        </div>
+                        <div class="why-stat">
+                            <div class="why-stat-num">24/7</div>
+                            <div class="why-stat-label">Emergency & trauma services</div>
+                        </div>
+                        <div class="why-stat">
+                            <div class="why-stat-num">40+</div>
+                            <div class="why-stat-label">Clinical specialities</div>
+                        </div>
+                        <div class="why-stat">
+                            <div class="why-stat-num">3min</div>
+                            <div class="why-stat-label">Average ER response time</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="why-float">
+                    <div class="why-float-icon">🏅</div>
+                    <div>
+                        <div class="why-float-title">JCI Accredited</div>
+                        <div class="why-float-sub">International standards · Since 2005</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="sec-eyebrow">Why Choose KILARI'S</div>
+                <h2 class="sec-title">India's Most <span>Advanced</span> Hospital Network</h2>
+                <p style="font-size:.93rem;color:var(--subtext);line-height:1.75;margin:1rem 0 0;">For 25 years,
+                    KILARI'S has been at the forefront of medical innovation in India. We combine global expertise with
+                    Indian sensibilities to deliver care that transforms lives.</p>
+                <div class="why-points">
+                    <div class="why-point">
+                        <div class="why-point-icon">🤖</div>
+                        <div>
+                            <div class="why-point-title">Robotic Surgery & AI Diagnostics</div>
+                            <div class="why-point-desc">India's largest robotic surgery programme with Da Vinci systems
+                                across 12 centres. AI-powered diagnostics reduce errors and speed up results.</div>
+                        </div>
+                    </div>
+                    <div class="why-point">
+                        <div class="why-point-icon">🌐</div>
+                        <div>
+                            <div class="why-point-title">45 Hospitals Across India</div>
+                            <div class="why-point-desc">From metro cities to tier-2 towns — KILARI'S is always close to
+                                you. Seamless patient records and referrals across all our centres.</div>
+                        </div>
+                    </div>
+                    <div class="why-point">
+                        <div class="why-point-icon">🎓</div>
+                        <div>
+                            <div class="why-point-title">Internationally Trained Specialists</div>
+                            <div class="why-point-desc">Over 300 doctors trained at Harvard, Mayo Clinic, Johns Hopkins,
+                                and leading European institutions bring world-class expertise home.</div>
+                        </div>
+                    </div>
+                    <div class="why-point">
+                        <div class="why-point-icon">💻</div>
+                        <div>
+                            <div class="why-point-title">Digital Health Ecosystem</div>
+                            <div class="why-point-desc">Book appointments, access reports, consult virtually, and manage
+                                your complete health journey on the KILARI'S digital platform.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── NUMBERS BAND ── -->
+    <div class="numbers-band">
+        <div class="numbers-grid">
+            <div class="num-item">
+                <div class="num-icon">🏥</div>
+                <div class="num-value">45<span>+</span></div>
+                <div class="num-label">Hospitals</div>
+            </div>
+            <div class="num-item">
+                <div class="num-icon">👨‍⚕️</div>
+                <div class="num-value">1,200<span>+</span></div>
+                <div class="num-label">Specialists</div>
+            </div>
+            <div class="num-item">
+                <div class="num-icon">🧑‍🤝‍🧑</div>
+                <div class="num-value">5M<span>+</span></div>
+                <div class="num-label">Lives Touched</div>
+            </div>
+            <div class="num-item">
+                <div class="num-icon">🏅</div>
+                <div class="num-value">120<span>+</span></div>
+                <div class="num-label">Awards</div>
+            </div>
+            <div class="num-item">
+                <div class="num-icon">🌍</div>
+                <div class="num-value">140<span>+</span></div>
+                <div class="num-label">Countries Served</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── DOCTORS ── -->
+    <section style="background:var(--gray);" id="doctors">
+        <div class="sec-header">
+            <div>
+                <div class="sec-eyebrow">Our Team</div>
+                <h2 class="sec-title">Meet Our <span>Expert Doctors</span></h2>
+                <p class="sec-sub">Internationally trained specialists delivering compassionate, evidence-based care.
+                </p>
+            </div>
+            <a href="#" class="see-all">View All Doctors →</a>
+        </div>
+        <div class="doctors-grid">
+            <div class="doc-card">
+                <div class="doc-photo dp-1">
+                    <div class="doc-avatar">👨‍⚕️</div><span class="doc-exp-badge">18 yrs</span>
+                </div>
+                <div class="doc-info">
+                    <div class="doc-name">Dr. Arjun Mehta</div>
+                    <div class="doc-spec">Interventional Cardiology</div>
+                    <div class="doc-hosp">🏥 KILARI'S, Hyderabad · Harvard Alumni</div>
+                    <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.9</span><span
+                            class="rating-cnt">(312)</span><span class="doc-avail">● Available</span></div>
+                </div>
+            </div>
+            <div class="doc-card">
+                <div class="doc-photo dp-2">
+                    <div class="doc-avatar">👩‍⚕️</div><span class="doc-exp-badge">15 yrs</span>
+                </div>
+                <div class="doc-info">
+                    <div class="doc-name">Dr. Priya Nair</div>
+                    <div class="doc-spec">Neurosurgery</div>
+                    <div class="doc-hosp">🏥 KILARI'S, Mumbai · Johns Hopkins</div>
+                    <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.8</span><span
+                            class="rating-cnt">(278)</span><span class="doc-avail">● Available</span></div>
+                </div>
+            </div>
+            <div class="doc-card">
+                <div class="doc-photo dp-3">
+                    <div class="doc-avatar">👨‍⚕️</div><span class="doc-exp-badge">21 yrs</span>
+                </div>
+                <div class="doc-info">
+                    <div class="doc-name">Dr. Samuel Osei</div>
+                    <div class="doc-spec">Pediatric Oncology</div>
+                    <div class="doc-hosp">🏥 KILARI'S, Bangalore · Mayo Clinic</div>
+                    <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">5.0</span><span
+                            class="rating-cnt">(445)</span><span class="doc-avail">● Available</span></div>
+                </div>
+            </div>
+            <div class="doc-card">
+                <div class="doc-photo dp-4">
+                    <div class="doc-avatar">👩‍⚕️</div><span class="doc-exp-badge">12 yrs</span>
+                </div>
+                <div class="doc-info">
+                    <div class="doc-name">Dr. Ananya Sharma</div>
+                    <div class="doc-spec">Robotic Orthopedics</div>
+                    <div class="doc-hosp">🏥 KILARI'S, Chennai · AIIMS Alumni</div>
+                    <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.7</span><span
+                            class="rating-cnt">(189)</span><span class="doc-avail">● Available</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── SERVICES ── -->
+    <section style="background:#fff;">
+        <div class="sec-header">
+            <div>
+                <div class="sec-eyebrow">Our Services</div>
+                <h2 class="sec-title">Everything You Need,<br><span>All in One Place</span></h2>
+            </div>
+        </div>
+        <div class="services-grid">
+            <div class="svc-card teal" style="border-top:3px solid var(--teal);">
+                <div class="svc-icon-wrap" style="background:rgba(0,168,157,.1)">🏥</div>
+                <div class="svc-title">OPD & Specialist Consultation</div>
+                <div class="svc-desc">Book appointments with 1,200+ specialists across cardiology, neurology, oncology,
+                    and 40+ other departments. Same-day appointments available.</div>
+                <div class="svc-link" onclick="openPlatform('patient')">Book Now →</div>
+            </div>
+            <div class="svc-card blue" style="border-top:3px solid var(--blue);">
+                <div class="svc-icon-wrap" style="background:rgba(0,87,168,.08)">🩸</div>
+                <div class="svc-title">Home Blood Collection</div>
+                <div class="svc-desc">NABL-accredited lab tests collected at your doorstep. 100+ tests available.
+                    Reports delivered digitally within 4–24 hours. Starting at ₹299.</div>
+                <div class="svc-link" onclick="openPlatform('patient')">Book Test →</div>
+            </div>
+            <div class="svc-card orange" style="border-top:3px solid var(--orange);">
+                <div class="svc-icon-wrap" style="background:rgba(244,132,95,.1)">💻</div>
+                <div class="svc-title">Online Consultation (Teleconsult)</div>
+                <div class="svc-desc">Connect with top specialists from the comfort of your home. Available 7 days a
+                    week. Instant digital prescriptions and follow-up notes.</div>
+                <div class="svc-link" onclick="openPlatform('patient')">Consult Now →</div>
+            </div>
+            <div class="svc-card teal" style="border-top:3px solid var(--gold);">
+                <div class="svc-icon-wrap" style="background:rgba(245,158,11,.08)">🚑</div>
+                <div class="svc-title">Emergency & Trauma Care</div>
+                <div class="svc-desc">24/7 fully equipped emergency departments with Level-I trauma centres, ICUs,
+                    cardiac cath labs, and on-call specialists across all locations.</div>
+                <div class="svc-link">Learn More →</div>
+            </div>
+            <div class="svc-card blue" style="border-top:3px solid var(--red);">
+                <div class="svc-icon-wrap" style="background:rgba(230,57,70,.07)">🤖</div>
+                <div class="svc-title">Robotic & Minimally Invasive Surgery</div>
+                <div class="svc-desc">India's largest robotic surgery programme — joint replacements, cardiac,
+                    gynaecology, urology and oncology surgeries with faster recovery times.</div>
+                <div class="svc-link">Know More →</div>
+            </div>
+            <div class="svc-card orange" style="border-top:3px solid var(--pink);">
+                <div class="svc-icon-wrap" style="background:rgba(236,72,153,.08)">📋</div>
+                <div class="svc-title">Health Plans & Preventive Care</div>
+                <div class="svc-desc">Comprehensive annual health packages from ₹1,499. Full body checkup, dental, eye,
+                    cardiac, cancer screenings for individuals and families.</div>
+                <div class="svc-link">View Plans →</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── BLOOD TEST ── -->
+    <section class="blood-section" id="blood">
+        <div class="blood-grid">
+            <div>
+                <div class="sec-eyebrow">Book at Home</div>
+                <h2 class="sec-title">Lab Tests from the<br><span>Comfort of Home</span></h2>
+                <p style="font-size:.9rem;color:var(--subtext);line-height:1.75;margin:1rem 0;">Our trained
+                    phlebotomists visit your home, collect samples, and send you digital reports in 4–24 hours. NABL
+                    certified, 100% accurate.</p>
+                <div class="blood-features">
+                    <div class="blood-feat">
+                        <div class="bf-icon">🕐</div>
+                        <div>
+                            <div class="bf-title">Early Morning Slots</div>
+                            <div class="bf-desc">6 AM – 9 AM collection for faster reports</div>
+                        </div>
+                    </div>
+                    <div class="blood-feat">
+                        <div class="bf-icon">📱</div>
+                        <div>
+                            <div class="bf-title">Digital Reports</div>
+                            <div class="bf-desc">Receive via WhatsApp, email & app</div>
+                        </div>
+                    </div>
+                    <div class="blood-feat">
+                        <div class="bf-icon">🏅</div>
+                        <div>
+                            <div class="bf-title">NABL Accredited</div>
+                            <div class="bf-desc">Government-approved lab quality</div>
+                        </div>
+                    </div>
+                    <div class="blood-feat">
+                        <div class="bf-icon">💊</div>
+                        <div>
+                            <div class="bf-title">Free Doctor Consult</div>
+                            <div class="bf-desc">On abnormal reports at no cost</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="blood-tests-list">
+                    <div
+                        style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:1rem;">
+                        Popular Tests</div>
+                    <div class="bt-item">
+                        <div>
+                            <div class="bt-name">Complete Blood Count (CBC)</div>
+                            <div class="bt-meta">⏱ 24 hrs · 🏅 NABL Certified</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹299</span><button
+                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                    </div>
+                    <div class="bt-item">
+                        <div>
+                            <div class="bt-name">Lipid Profile</div>
+                            <div class="bt-meta">⏱ 24 hrs · 🏅 NABL Certified</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹499</span><button
+                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                    </div>
+                    <div class="bt-item">
+                        <div>
+                            <div class="bt-name">HbA1c (Diabetes Check)</div>
+                            <div class="bt-meta">⏱ 24 hrs · 🏅 NABL Certified</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹599</span><button
+                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                    </div>
+                    <div class="bt-item">
+                        <div>
+                            <div class="bt-name">Thyroid Panel (TSH, T3, T4)</div>
+                            <div class="bt-meta">⏱ 48 hrs · 🏅 NABL Certified</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹799</span><button
+                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                    </div>
+                    <div class="bt-item">
+                        <div>
+                            <div class="bt-name">Liver Function Test (LFT)</div>
+                            <div class="bt-meta">⏱ 24 hrs · 🏅 NABL Certified</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹699</span><button
+                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                    </div>
+                    <div class="bt-item">
+                        <div>
+                            <div class="bt-name">Kidney Function Test (KFT)</div>
+                            <div class="bt-meta">⏱ 24 hrs · 🏅 NABL Certified</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹649</span><button
+                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                    </div>
+                </div>
+                <button
+                    style="width:100%;margin-top:1rem;background:var(--red);color:#fff;border:none;padding:.85rem;border-radius:8px;font-size:.88rem;font-weight:600;"
+                    onclick="openPlatform('patient')">🩸 Book Home Collection Now</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── TESTIMONIALS ── -->
+    <section class="testi-section">
+        <div class="sec-header">
+            <div>
+                <div class="sec-eyebrow">Patient Stories</div>
+                <h2 class="sec-title">Real People. <span>Real Healing.</span></h2>
+            </div>
+        </div>
+        <div class="testi-grid">
+            <div class="testi-card">
+                <div class="testi-quote">"</div>
+                <p class="testi-text">The level of care during my bypass surgery was extraordinary. From admission to
+                    discharge, every single staff member — surgeons, nurses, even housekeeping — showed genuine
+                    compassion. I felt safe throughout.</p>
+                <div class="testi-author">
+                    <div class="testi-av">👨</div>
+                    <div>
+                        <div class="testi-name">Robert Chen</div>
+                        <div class="testi-role">Cardiac Bypass Patient · Hyderabad</div>
+                    </div>
+                    <div class="testi-rating">★★★★★</div>
+                </div>
+            </div>
+            <div class="testi-card">
+                <div class="testi-quote">"</div>
+                <p class="testi-text">Dr. Priya Nair and her neurology team gave my son a second chance at life after
+                    his accident. The robotic surgery, the ICU care, the physiotherapy — all world-class. We are forever
+                    grateful.</p>
+                <div class="testi-author">
+                    <div class="testi-av">👩</div>
+                    <div>
+                        <div class="testi-name">Amara Okafor</div>
+                        <div class="testi-role">Parent of Patient · Mumbai</div>
+                    </div>
+                    <div class="testi-rating">★★★★★</div>
+                </div>
+            </div>
+            <div class="testi-card">
+                <div class="testi-quote">"</div>
+                <p class="testi-text">I booked a home blood test at 7 AM, and my reports were on my phone by noon. The
+                    phlebotomist was professional and gentle. The digital report with colour-coded ranges was so easy to
+                    understand.</p>
+                <div class="testi-author">
+                    <div class="testi-av">🧑</div>
+                    <div>
+                        <div class="testi-name">Sofia Martínez</div>
+                        <div class="testi-role">Lab Test Patient · Bangalore</div>
+                    </div>
+                    <div class="testi-rating">★★★★★</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── LOCATIONS ── -->
+    <section style="background:#fff;" id="locations">
+        <div class="sec-header">
+            <div>
+                <div class="sec-eyebrow">Where We Are</div>
+                <h2 class="sec-title">45 Hospitals Across <span>India</span></h2>
+                <p class="sec-sub">World-class care available in every major city and growing fast into tier-2 India.
+                </p>
+            </div>
+            <a href="#" class="see-all">Find Nearest Hospital →</a>
+        </div>
+        <div class="locations-grid">
+            <div class="loc-card">
+                <div class="loc-icon">🌆</div>
+                <div class="loc-city">Hyderabad</div>
+                <div class="loc-count">6 Hospitals · 3 Clinics</div>
+            </div>
+            <div class="loc-card">
+                <div class="loc-icon">🏙️</div>
+                <div class="loc-city">Mumbai</div>
+                <div class="loc-count">7 Hospitals · 5 Clinics</div>
+            </div>
+            <div class="loc-card">
+                <div class="loc-icon">🌇</div>
+                <div class="loc-city">Bangalore</div>
+                <div class="loc-count">5 Hospitals · 4 Clinics</div>
+            </div>
+            <div class="loc-card">
+                <div class="loc-icon">🏛️</div>
+                <div class="loc-city">Delhi NCR</div>
+                <div class="loc-count">8 Hospitals · 6 Clinics</div>
+            </div>
+            <div class="loc-card">
+                <div class="loc-icon">🌴</div>
+                <div class="loc-city">Chennai</div>
+                <div class="loc-count">4 Hospitals · 3 Clinics</div>
+            </div>
+            <div class="loc-card">
+                <div class="loc-icon">🌸</div>
+                <div class="loc-city">Pune</div>
+                <div class="loc-count">3 Hospitals · 2 Clinics</div>
+            </div>
+            <div class="loc-card">
+                <div class="loc-icon">🏞️</div>
+                <div class="loc-city">Kolkata</div>
+                <div class="loc-count">3 Hospitals · 2 Clinics</div>
+            </div>
+            <div class="loc-card">
+                <div class="loc-icon">🌻</div>
+                <div class="loc-city">Ahmedabad</div>
+                <div class="loc-count">2 Hospitals · 2 Clinics</div>
+            </div>
+            <div class="loc-card">
+                <div class="loc-icon">🏔️</div>
+                <div class="loc-city">Chandigarh</div>
+                <div class="loc-count">1 Hospital · 2 Clinics</div>
+            </div>
+            <div class="loc-card">
+                <div class="loc-icon">🌊</div>
+                <div class="loc-city">Kochi</div>
+                <div class="loc-count">2 Hospitals · 1 Clinic</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── CTA BAND ── -->
+    <div class="cta-band">
+        <div>
+            <h2 class="cta-title">Your Health. Our Mission.</h2>
+            <p class="cta-sub">Join 5 million patients who trust KILARI'S for their health care journey. Book today.</p>
+        </div>
+        <div class="cta-actions">
+            <button class="cta-btn" onclick="openPlatform('patient')">📅 Book Appointment</button>
+            <button class="cta-btn-outline" onclick="openPlatform('admin')">📊 Platform Dashboard</button>
+        </div>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo-wrap">
+                    <div class="logo-icon" style="width:36px;height:36px;"></div>
+                    <div>
+                        <div class="logo-name" style="color:#fff;">KILARI'S Hospitals</div>
+                        <div class="logo-tagline" style="color:rgba(0,201,167,.7);">Touching Lives · Caring Always</div>
+                    </div>
+                </div>
+                <p>India's most trusted multi-speciality hospital network. JCI Accredited. ISO 9001. NABH Certified. 25+
+                    years of medical excellence across 45 hospitals.</p>
+                <div class="footer-social">
+                    <div class="social-btn">🐦</div>
+                    <div class="social-btn">📘</div>
+                    <div class="social-btn">📸</div>
+                    <div class="social-btn">▶️</div>
+                </div>
+            </div>
+            <div>
+                <div class="footer-col-title">Services</div>
+                <ul class="footer-links">
+                    <li><a href="#">Emergency Care</a></li>
+                    <li><a href="#">OPD Consultation</a></li>
+                    <li><a href="#">Diagnostics</a></li>
+                    <li><a href="#">Surgery</a></li>
+                    <li><a href="#">Lab Tests</a></li>
+                    <li><a href="#">Teleconsult</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-col-title">Specialities</div>
+                <ul class="footer-links">
+                    <li><a href="#">Cardiology</a></li>
+                    <li><a href="#">Neurology</a></li>
+                    <li><a href="#">Oncology</a></li>
+                    <li><a href="#">Orthopedics</a></li>
+                    <li><a href="#">Pediatrics</a></li>
+                    <li><a href="#">Transplants</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-col-title">For Patients</div>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="openPlatform('patient')">Patient Portal</a></li>
+                    <li><a href="#">Insurance & TPA</a></li>
+                    <li><a href="#">Health Plans</a></li>
+                    <li><a href="#">Visitor Policy</a></li>
+                    <li><a href="#">Health Library</a></li>
+                    <li><a href="#">Medical Records</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-col-title">Company</div>
+                <ul class="footer-links">
+                    <li><a href="#">About KILARI'S</a></li>
+                    <li><a href="#">Leadership</a></li>
+                    <li><a href="#" onclick="openPlatform('hospital')">Hospital Portal</a></li>
+                    <li><a href="#" onclick="openPlatform('admin')">Admin Panel</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Investor Relations</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 KILARI'S Hospitals Ltd. All rights reserved. | Privacy Policy | Terms of Use</p>
+            <div class="accred-row">
+                <span class="accred">JCI</span><span class="accred">NABH</span>
+                <span class="accred">ISO 9001</span><span class="accred">NABL</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- PLATFORM MODAL OVERLAY                        -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div id="platform-overlay">
+        <div class="platform-topbar">
+            <div class="pt-logo">
+                <div class="pt-cross"></div>
+                <span class="pt-brand">KILARI'S Health Platform</span>
+                <span class="pt-role-badge" id="pt-role-label">Patient</span>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:center;">
+                <span style="font-size:.75rem;color:rgba(255,255,255,.4);">Switch to:</span>
+                <button onclick="openPlatform('admin')"
+                    style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#F59E0B;padding:.3rem .8rem;border-radius:5px;font-size:.72rem;">Admin</button>
+                <button onclick="openPlatform('hospital')"
+                    style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#60A5FA;padding:.3rem .8rem;border-radius:5px;font-size:.72rem;">Hospital</button>
+                <button onclick="openPlatform('patient')"
+                    style="background:rgba(0,201,167,.12);border:1px solid rgba(0,201,167,.3);color:#00C9A7;padding:.3rem .8rem;border-radius:5px;font-size:.72rem;">Patient</button>
+                <button class="pt-close" onclick="closePlatform()">✕ Close</button>
+            </div>
+        </div>
+        <div id="platform-content"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ SCRIPTS -->
+     <script src="/script.js"></script>
+</body>
+
+</html>
