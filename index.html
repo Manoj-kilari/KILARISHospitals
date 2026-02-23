@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Meridian Hospitals – Best Multispeciality Hospital in India</title>
+    <title>Kilari's Hospitals – Best Multispeciality Hospital in India</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet" />
@@ -34,7 +34,7 @@
         <div class="logo-wrap">
             <div class="logo-icon"></div>
             <div>
-                <div class="logo-name">Meridian Hospitals</div>
+                <div class="logo-name">Kilari's Hospitals</div>
                 <div class="logo-tagline">Touching Lives · Caring Always</div>
             </div>
         </div>
@@ -47,27 +47,27 @@
             <a href="#" class="nav-link">Health Plans</a>
             <a href="#" class="nav-link">About Us</a>
         </div>
-        <div class="nav-actions">
-            <button class="btn-login" onclick="openPlatform('patient')">Patient Login</button>
-            <button class="btn-book" onclick="openPlatform('patient')">Book Appointment</button>
+        <div class="nav-actions" id="nav-actions">
+            <button class="btn-login" id="nav-login-btn">Patient Login</button>
+            <button class="btn-book" id="nav-book-btn">Book Appointment</button>
         </div>
-        <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu">
+        <button class="hamburger" id="hamburger" aria-label="Menu">
             <span></span><span></span><span></span>
         </button>
     </nav>
 
     <!-- Mobile Nav Drawer -->
     <div class="mobile-nav" id="mobile-nav">
-        <a href="#" class="nav-link active" onclick="closeNav()">Home</a>
-        <a href="#departments" class="nav-link" onclick="closeNav()">Specialities</a>
-        <a href="#doctors" class="nav-link" onclick="closeNav()">Doctors</a>
-        <a href="#blood" class="nav-link" onclick="closeNav()">Lab Tests</a>
-        <a href="#locations" class="nav-link" onclick="closeNav()">Locations</a>
-        <a href="#" class="nav-link" onclick="closeNav()">Health Plans</a>
-        <a href="#" class="nav-link" onclick="closeNav()">About Us</a>
-        <div class="mobile-nav-actions">
-            <button class="btn-login" onclick="closeNav();openPlatform('patient')">Patient Login</button>
-            <button class="btn-book" onclick="closeNav();openPlatform('patient')">Book Appointment</button>
+        <a href="#" class="nav-link active">Home</a>
+        <a href="#departments" class="nav-link">Specialities</a>
+        <a href="#doctors" class="nav-link">Doctors</a>
+        <a href="#blood" class="nav-link">Lab Tests</a>
+        <a href="#locations" class="nav-link">Locations</a>
+        <a href="#" class="nav-link">Health Plans</a>
+        <a href="#" class="nav-link">About Us</a>
+        <div class="mobile-nav-actions" id="mobile-nav-actions">
+            <button class="btn-login" id="mob-login-btn">Patient Login</button>
+            <button class="btn-book" id="mob-book-btn">Book Appointment</button>
         </div>
     </div>
 
@@ -79,11 +79,11 @@
                 <span>India's Most Trusted Healthcare Network</span>
             </div>
             <h1 class="hero-h1">World-Class Care,<br><em>Close to You.</em></h1>
-            <p class="hero-p">Meridian Hospitals brings together 1,200+ specialists, 70+ advanced diagnostic centres,
+            <p class="hero-p">Kilari's Hospitals brings together 1,200+ specialists, 70+ advanced diagnostic centres,
                 and 25 years of medical excellence — all committed to your health and healing.</p>
             <div class="hero-actions">
-                <button class="hero-btn-primary" onclick="openPlatform('patient')">📅 Book Appointment</button>
-                <button class="hero-btn-outline" onclick="openPlatform('patient')">🩸 Book Lab Test at Home</button>
+                <button class="hero-btn-primary" onclick="requireLogin()">📅 Book Appointment</button>
+                <button class="hero-btn-outline" onclick="requireLogin()">🩸 Book Lab Test at Home</button>
             </div>
             <div class="hero-stats">
                 <div class="hstat"><span class="hstat-num">25<span>+</span></span><span class="hstat-label">Years of
@@ -127,7 +127,7 @@
                     </div>
                     <button
                         style="width:100%;margin-top:1rem;background:var(--blue2);color:#fff;border:none;padding:.75rem;border-radius:8px;font-size:.85rem;font-weight:600;"
-                        onclick="openPlatform('patient')">Confirm Appointment</button>
+                        onclick="requireLogin()">Confirm Appointment</button>
                 </div>
                 <div class="hero-float-2">
                     <div class="hf2-icon">🏠</div>
@@ -263,10 +263,10 @@
                 </div>
             </div>
             <div>
-                <div class="sec-eyebrow">Why Choose Meridian</div>
+                <div class="sec-eyebrow">Why Choose Kilari's</div>
                 <h2 class="sec-title">India's Most <span>Advanced</span> Hospital Network</h2>
                 <p style="font-size:.93rem;color:var(--subtext);line-height:1.75;margin:1rem 0 0;">For 25 years,
-                    Meridian has been at the forefront of medical innovation in India. We combine global expertise with
+                    Kilari's has been at the forefront of medical innovation in India. We combine global expertise with
                     Indian sensibilities to deliver care that transforms lives.</p>
                 <div class="why-points">
                     <div class="why-point">
@@ -281,7 +281,7 @@
                         <div class="why-point-icon">🌐</div>
                         <div>
                             <div class="why-point-title">45 Hospitals Across India</div>
-                            <div class="why-point-desc">From metro cities to tier-2 towns — Meridian is always close to
+                            <div class="why-point-desc">From metro cities to tier-2 towns — Kilari's is always close to
                                 you. Seamless patient records and referrals across all our centres.</div>
                         </div>
                     </div>
@@ -298,7 +298,7 @@
                         <div>
                             <div class="why-point-title">Digital Health Ecosystem</div>
                             <div class="why-point-desc">Book appointments, access reports, consult virtually, and manage
-                                your complete health journey on the Meridian digital platform.</div>
+                                your complete health journey on the Kilari's digital platform.</div>
                         </div>
                     </div>
                 </div>
@@ -356,7 +356,7 @@
                 <div class="doc-info">
                     <div class="doc-name">Dr. Arjun Mehta</div>
                     <div class="doc-spec">Interventional Cardiology</div>
-                    <div class="doc-hosp">🏥 Meridian, Hyderabad · Harvard Alumni</div>
+                    <div class="doc-hosp">🏥 Kilari's, Hyderabad · Harvard Alumni</div>
                     <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.9</span><span
                             class="rating-cnt">(312)</span><span class="doc-avail">● Available</span></div>
                 </div>
@@ -368,7 +368,7 @@
                 <div class="doc-info">
                     <div class="doc-name">Dr. Priya Nair</div>
                     <div class="doc-spec">Neurosurgery</div>
-                    <div class="doc-hosp">🏥 Meridian, Mumbai · Johns Hopkins</div>
+                    <div class="doc-hosp">🏥 Kilari's, Mumbai · Johns Hopkins</div>
                     <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.8</span><span
                             class="rating-cnt">(278)</span><span class="doc-avail">● Available</span></div>
                 </div>
@@ -380,7 +380,7 @@
                 <div class="doc-info">
                     <div class="doc-name">Dr. Samuel Osei</div>
                     <div class="doc-spec">Pediatric Oncology</div>
-                    <div class="doc-hosp">🏥 Meridian, Bangalore · Mayo Clinic</div>
+                    <div class="doc-hosp">🏥 Kilari's, Bangalore · Mayo Clinic</div>
                     <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">5.0</span><span
                             class="rating-cnt">(445)</span><span class="doc-avail">● Available</span></div>
                 </div>
@@ -392,7 +392,7 @@
                 <div class="doc-info">
                     <div class="doc-name">Dr. Ananya Sharma</div>
                     <div class="doc-spec">Robotic Orthopedics</div>
-                    <div class="doc-hosp">🏥 Meridian, Chennai · AIIMS Alumni</div>
+                    <div class="doc-hosp">🏥 Kilari's, Chennai · AIIMS Alumni</div>
                     <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.7</span><span
                             class="rating-cnt">(189)</span><span class="doc-avail">● Available</span></div>
                 </div>
@@ -414,21 +414,21 @@
                 <div class="svc-title">OPD & Specialist Consultation</div>
                 <div class="svc-desc">Book appointments with 1,200+ specialists across cardiology, neurology, oncology,
                     and 40+ other departments. Same-day appointments available.</div>
-                <div class="svc-link" onclick="openPlatform('patient')">Book Now →</div>
+                <div class="svc-link" onclick="requireLogin()">Book Now →</div>
             </div>
             <div class="svc-card blue" style="border-top:3px solid var(--blue);">
                 <div class="svc-icon-wrap" style="background:rgba(0,87,168,.08)">🩸</div>
                 <div class="svc-title">Home Blood Collection</div>
                 <div class="svc-desc">NABL-accredited lab tests collected at your doorstep. 100+ tests available.
                     Reports delivered digitally within 4–24 hours. Starting at ₹299.</div>
-                <div class="svc-link" onclick="openPlatform('patient')">Book Test →</div>
+                <div class="svc-link" onclick="requireLogin()">Book Test →</div>
             </div>
             <div class="svc-card orange" style="border-top:3px solid var(--orange);">
                 <div class="svc-icon-wrap" style="background:rgba(244,132,95,.1)">💻</div>
                 <div class="svc-title">Online Consultation (Teleconsult)</div>
                 <div class="svc-desc">Connect with top specialists from the comfort of your home. Available 7 days a
                     week. Instant digital prescriptions and follow-up notes.</div>
-                <div class="svc-link" onclick="openPlatform('patient')">Consult Now →</div>
+                <div class="svc-link" onclick="requireLogin()">Consult Now →</div>
             </div>
             <div class="svc-card teal" style="border-top:3px solid var(--gold);">
                 <div class="svc-icon-wrap" style="background:rgba(245,158,11,.08)">🚑</div>
@@ -506,7 +506,7 @@
                         </div>
                         <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
                                 class="bt-price">₹299</span><button class="bt-book"
-                                onclick="openPlatform('patient')">Book</button></div>
+                                onclick="requireLogin()">Book</button></div>
                     </div>
                     <div class="bt-item">
                         <div>
@@ -515,7 +515,7 @@
                         </div>
                         <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
                                 class="bt-price">₹499</span><button class="bt-book"
-                                onclick="openPlatform('patient')">Book</button></div>
+                                onclick="requireLogin()">Book</button></div>
                     </div>
                     <div class="bt-item">
                         <div>
@@ -524,7 +524,7 @@
                         </div>
                         <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
                                 class="bt-price">₹599</span><button class="bt-book"
-                                onclick="openPlatform('patient')">Book</button></div>
+                                onclick="requireLogin()">Book</button></div>
                     </div>
                     <div class="bt-item">
                         <div>
@@ -533,7 +533,7 @@
                         </div>
                         <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
                                 class="bt-price">₹799</span><button class="bt-book"
-                                onclick="openPlatform('patient')">Book</button></div>
+                                onclick="requireLogin()">Book</button></div>
                     </div>
                     <div class="bt-item">
                         <div>
@@ -542,7 +542,7 @@
                         </div>
                         <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
                                 class="bt-price">₹699</span><button class="bt-book"
-                                onclick="openPlatform('patient')">Book</button></div>
+                                onclick="requireLogin()">Book</button></div>
                     </div>
                     <div class="bt-item">
                         <div>
@@ -551,12 +551,12 @@
                         </div>
                         <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
                                 class="bt-price">₹649</span><button class="bt-book"
-                                onclick="openPlatform('patient')">Book</button></div>
+                                onclick="requireLogin()">Book</button></div>
                     </div>
                 </div>
                 <button
                     style="width:100%;margin-top:1rem;background:var(--red);color:#fff;border:none;padding:.85rem;border-radius:8px;font-size:.88rem;font-weight:600;"
-                    onclick="openPlatform('patient')">🩸 Book Home Collection Now</button>
+                    onclick="requireLogin()">🩸 Book Home Collection Now</button>
             </div>
         </div>
     </section>
@@ -684,10 +684,10 @@
     <div class="cta-band">
         <div>
             <h2 class="cta-title">Your Health. Our Mission.</h2>
-            <p class="cta-sub">Join 5 million patients who trust Meridian for their health care journey. Book today.</p>
+            <p class="cta-sub">Join 5 million patients who trust Kilari's for their health care journey. Book today.</p>
         </div>
         <div class="cta-actions">
-            <button class="cta-btn" onclick="openPlatform('patient')">📅 Book Appointment</button>
+            <button class="cta-btn" onclick="requireLogin()">📅 Book Appointment</button>
             <button class="cta-btn-outline" onclick="openPlatform('admin')">📊 Platform Dashboard</button>
         </div>
     </div>
@@ -699,7 +699,7 @@
                 <div class="logo-wrap">
                     <div class="logo-icon" style="width:36px;height:36px;"></div>
                     <div>
-                        <div class="logo-name" style="color:#fff;">Meridian Hospitals</div>
+                        <div class="logo-name" style="color:#fff;">Kilari's Hospitals</div>
                         <div class="logo-tagline" style="color:rgba(0,201,167,.7);">Touching Lives · Caring Always</div>
                     </div>
                 </div>
@@ -737,7 +737,7 @@
             <div>
                 <div class="footer-col-title">For Patients</div>
                 <ul class="footer-links">
-                    <li><a href="#" onclick="openPlatform('patient')">Patient Portal</a></li>
+                    <li><a href="#" onclick="requireLogin()">Patient Portal</a></li>
                     <li><a href="#">Insurance & TPA</a></li>
                     <li><a href="#">Health Plans</a></li>
                     <li><a href="#">Visitor Policy</a></li>
@@ -748,7 +748,7 @@
             <div>
                 <div class="footer-col-title">Company</div>
                 <ul class="footer-links">
-                    <li><a href="#">About Meridian</a></li>
+                    <li><a href="#">About Kilari's</a></li>
                     <li><a href="#">Leadership</a></li>
                     <li><a href="#" onclick="openPlatform('hospital')">Hospital Portal</a></li>
                     <li><a href="#" onclick="openPlatform('admin')">Admin Panel</a></li>
@@ -758,7 +758,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 Meridian Hospitals Ltd. All rights reserved. | Privacy Policy | Terms of Use</p>
+            <p>© 2025 Kilari's Hospitals Ltd. All rights reserved. | Privacy Policy | Terms of Use</p>
             <div class="accred-row">
                 <span class="accred">JCI</span><span class="accred">NABH</span>
                 <span class="accred">ISO 9001</span><span class="accred">NABL</span>
@@ -767,13 +767,132 @@
     </footer>
 
     <!-- ═══════════════════════════════════════════════ -->
+    <!-- LOGIN / REGISTER MODAL                        -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div id="login-overlay">
+        <div class="login-modal" id="login-modal">
+            <div class="lm-header">
+                <div class="lm-logo">
+                    <div class="lm-logo-icon"></div>
+                    <span class="lm-logo-name">Kilari's Hospitals</span>
+                </div>
+                <button class="lm-close" onclick="closeLoginModal()" aria-label="Close login form"
+                    title="Close">&#x2715;</button>
+                <div class="lm-title" id="lm-title">Welcome Back</div>
+                <div class="lm-sub" id="lm-sub">Sign in to your patient account</div>
+                <div class="lm-tabs" id="lm-tabs">
+                    <button class="lm-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
+                    <button class="lm-tab" id="tab-register" onclick="switchAuthTab('register')">Create Account</button>
+                </div>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <div class="lm-body" id="lm-login-form">
+                <div class="lm-hint">
+                    <strong>Demo Credentials</strong>
+                    Email: <b>patient&#64;kilari.com</b> &nbsp;·&nbsp; Password: <b>Patient&#64;123</b>
+                </div>
+                <div class="lm-group">
+                    <label class="lm-label">Email Address</label>
+                    <div class="lm-input-wrap">
+                        <span class="lm-icon">📧</span>
+                        <input type="email" class="lm-input" id="login-email" placeholder="patient@kilari.com"
+                            autocomplete="email" />
+                    </div>
+                    <div class="lm-error" id="login-email-err">Please enter a valid email address</div>
+                </div>
+                <div class="lm-group">
+                    <label class="lm-label">Password</label>
+                    <div class="lm-input-wrap">
+                        <span class="lm-icon">🔒</span>
+                        <input type="password" class="lm-input" id="login-password" placeholder="Enter your password"
+                            autocomplete="current-password" />
+                        <button class="lm-toggle-pw" onclick="togglePw('login-password',this)" tabindex="-1">👁</button>
+                    </div>
+                    <div class="lm-error" id="login-pw-err">Incorrect email or password</div>
+                </div>
+                <div class="lm-row">
+                    <label class="lm-check"><input type="checkbox" id="remember-me" /> Remember me</label>
+                    <button class="lm-forgot" onclick="showForgot()">Forgot password?</button>
+                </div>
+                <button class="lm-submit" id="login-submit-btn" onclick="doLogin()">Sign In</button>
+                <div class="lm-divider"><span>or continue with</span></div>
+                <div class="lm-social-row">
+                    <button class="lm-social-btn" onclick="socialLogin('Google')">🌐 Google</button>
+                    <button class="lm-social-btn" onclick="socialLogin('Facebook')">📘 Facebook</button>
+                </div>
+            </div>
+
+            <!-- REGISTER FORM -->
+            <div class="lm-body" id="lm-register-form" style="display:none">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+                    <div class="lm-group">
+                        <label class="lm-label">First Name</label>
+                        <div class="lm-input-wrap">
+                            <span class="lm-icon">👤</span>
+                            <input type="text" class="lm-input" id="reg-fname" placeholder="Rahul" />
+                        </div>
+                        <div class="lm-error" id="reg-fname-err">Required</div>
+                    </div>
+                    <div class="lm-group">
+                        <label class="lm-label">Last Name</label>
+                        <div class="lm-input-wrap">
+                            <span class="lm-icon">👤</span>
+                            <input type="text" class="lm-input" id="reg-lname" placeholder="Sharma" />
+                        </div>
+                        <div class="lm-error" id="reg-lname-err">Required</div>
+                    </div>
+                </div>
+                <div class="lm-group">
+                    <label class="lm-label">Email Address</label>
+                    <div class="lm-input-wrap">
+                        <span class="lm-icon">📧</span>
+                        <input type="email" class="lm-input" id="reg-email" placeholder="your@email.com" />
+                    </div>
+                    <div class="lm-error" id="reg-email-err">Please enter a valid email</div>
+                </div>
+                <div class="lm-group">
+                    <label class="lm-label">Mobile Number</label>
+                    <div class="lm-input-wrap">
+                        <span class="lm-icon">📱</span>
+                        <input type="tel" class="lm-input" id="reg-phone" placeholder="+91 98765 43210" />
+                    </div>
+                    <div class="lm-error" id="reg-phone-err">Enter a valid phone number</div>
+                </div>
+                <div class="lm-group">
+                    <label class="lm-label">Password</label>
+                    <div class="lm-input-wrap">
+                        <span class="lm-icon">🔒</span>
+                        <input type="password" class="lm-input" id="reg-password" placeholder="Min 8 characters" />
+                        <button class="lm-toggle-pw" onclick="togglePw('reg-password',this)" tabindex="-1">👁</button>
+                    </div>
+                    <div class="lm-error" id="reg-pw-err">Password must be at least 8 characters</div>
+                </div>
+                <button class="lm-submit" id="reg-submit-btn" onclick="doRegister()">Create Account</button>
+            </div>
+
+            <!-- SUCCESS STATE -->
+            <div class="lm-success" id="lm-success-state" style="display:none">
+                <div class="lm-success-icon">🎉</div>
+                <div class="lm-success-title" id="lm-success-title">Welcome, Rahul!</div>
+                <div class="lm-success-sub" id="lm-success-sub">You're now signed in. Opening your patient portal…</div>
+            </div>
+
+            <!-- CANCEL BAR -->
+            <div class="lm-cancel-bar" id="lm-cancel-bar">
+                <button class="lm-cancel-btn" onclick="closeLoginModal()">&#x2715; Cancel &amp; Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
     <!-- PLATFORM MODAL OVERLAY                        -->
     <!-- ═══════════════════════════════════════════════ -->
     <div id="platform-overlay">
         <div class="platform-topbar">
             <div class="pt-logo">
                 <div class="pt-cross"></div>
-                <span class="pt-brand">Meridian Health Platform</span>
+                <span class="pt-brand">Kilari's Health Platform</span>
                 <span class="pt-role-badge" id="pt-role-label">Patient</span>
             </div>
             <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;" class="pt-switch-btns">
@@ -782,15 +901,13 @@
                     style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#F59E0B;padding:.3rem .7rem;border-radius:5px;font-size:.7rem;">Admin</button>
                 <button onclick="openPlatform('hospital')"
                     style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#60A5FA;padding:.3rem .7rem;border-radius:5px;font-size:.7rem;">Hospital</button>
-                <button onclick="openPlatform('patient')"
+                <button onclick="requireLogin()"
                     style="background:rgba(0,201,167,.12);border:1px solid rgba(0,201,167,.3);color:#00C9A7;padding:.3rem .7rem;border-radius:5px;font-size:.7rem;">Patient</button>
                 <button class="pt-close" onclick="closePlatform()">✕ Close</button>
             </div>
         </div>
         <div id="platform-content"></div>
     </div>
-
-    <!-- ═══════════════════════════════════════ SCRIPTS -->
     <script src="script.js"></script>
 </body>
 

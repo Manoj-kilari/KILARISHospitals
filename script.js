@@ -1,4 +1,131 @@
 
+/* ═══════════════════════════════════════════════════
+   INIT – wire up static buttons after DOM is ready
+   ═══════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function () {
+  // Hamburger
+  const hamburger = document.getElementById('hamburger');
+  if (hamburger) hamburger.addEventListener('click', toggleNav);
+
+  // Desktop nav buttons (initial state — logged-out)
+  const navLoginBtn = document.getElementById('nav-login-btn');
+  if (navLoginBtn) navLoginBtn.addEventListener('click', () => openLoginModal('login'));
+
+  const navBookBtn = document.getElementById('nav-book-btn');
+  if (navBookBtn) navBookBtn.addEventListener('click', requireLogin);
+
+  // Mobile nav buttons (initial state — logged-out)
+  const mobLoginBtn = document.getElementById('mob-login-btn');
+  if (mobLoginBtn) mobLoginBtn.addEventListener('click', () => { closeNav(); openLoginModal('login'); });
+
+  const mobBookBtn = document.getElementById('mob-book-btn');
+  if (mobBookBtn) mobBookBtn.addEventListener('click', () => { closeNav(); requireLogin(); });
+
+  // Mobile nav links — close drawer on click
+  document.querySelectorAll('.mobile-nav .nav-link').forEach(link => {
+    link.addEventListener('click', closeNav);
+  });
+
+  // Login modal – backdrop click
+  const loginOverlay = document.getElementById('login-overlay');
+  if (loginOverlay) loginOverlay.addEventListener('click', function (e) {
+    if (e.target === this) closeLoginModal();
+  });
+
+  // Keyboard: Escape closes modals, Enter submits login form
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeLoginModal(); closePlatform(); }
+    if (e.key === 'Enter') {
+      const lo = document.getElementById('login-overlay');
+      if (lo && lo.classList.contains('show')) {
+        if (authTab === 'login') doLogin();
+        else doRegister();
+      }
+    }
+  });
+
+  // Outside-click closes nav drawer & user dropdown
+  document.addEventListener('click', function (e) {
+    const h = document.getElementById('hamburger');
+    const n = document.getElementById('mobile-nav');
+    const dd = document.getElementById('nav-dropdown');
+    const uw = document.getElementById('nav-user-wrap');
+    if (h && n && !h.contains(e.target) && !n.contains(e.target)) {
+      h.classList.remove('open'); n.classList.remove('open');
+    }
+    if (dd && uw && !uw.contains(e.target)) dd.classList.remove('open');
+  });
+
+  // Restore session
+  try {
+    const saved = sessionStorage.getItem('mh_user');
+    if (saved) { currentUser = JSON.parse(saved); renderNavAuth(); }
+  } catch (err) { }
+});
+
+/* ═══════════════════════════════════════════════════
+   AUTH STATE
+   ═══════════════════════════════════════════════════ */
+const DEMO_USER = { email: 'patient@meridian.com', password: 'Patient@123', name: 'Rahul Sharma', firstName: 'Rahul', phone: '+91 98765 43210' };
+let currentUser = null;
+let authTab = 'login';
+
+function saveUser(u) { currentUser = u; try { sessionStorage.setItem('mh_user', JSON.stringify(u)); } catch (e) { } }
+function clearUser() { currentUser = null; try { sessionStorage.removeItem('mh_user'); } catch (e) { } }
+
+/* ═══════════════════════════════════════════════════
+   NAVBAR AUTH RENDER
+   ═══════════════════════════════════════════════════ */
+function renderNavAuth() {
+  const actions = document.getElementById('nav-actions');
+  const mobileActions = document.getElementById('mobile-nav-actions');
+  if (!actions) return;
+
+  if (currentUser) {
+    const initials = currentUser.firstName ? currentUser.firstName.charAt(0).toUpperCase() : 'P';
+    // Desktop
+    actions.innerHTML = `
+      <button class="btn-book" onclick="requireLogin()">📅 Book Appointment</button>
+      <div class="nav-user" id="nav-user-wrap">
+        <div class="nav-avatar" onclick="toggleUserDropdown(event)">${initials}</div>
+        <span class="nav-user-name" onclick="toggleUserDropdown(event)">${currentUser.firstName}</span>
+        <div class="nav-user-dropdown" id="nav-dropdown">
+          <div class="nud-header">
+            <div class="nud-name">${currentUser.name}</div>
+            <div class="nud-email">${currentUser.email}</div>
+          </div>
+          <button class="nud-item" onclick="openPlatform('patient');closeDropdown()">🏠 My Dashboard</button>
+          <button class="nud-item" onclick="setPatSec&&setPatSec('book');openPlatform('patient');closeDropdown()">📅 Book Appointment</button>
+          <button class="nud-item" onclick="setPatSec&&setPatSec('reports');openPlatform('patient');closeDropdown()">📊 My Reports</button>
+          <button class="nud-item" onclick="setPatSec&&setPatSec('myappts');openPlatform('patient');closeDropdown()">📋 My Appointments</button>
+          <div class="nud-divider"></div>
+          <button class="nud-item danger" onclick="doLogout()">🚪 Sign Out</button>
+        </div>
+      </div>`;
+    // Mobile
+    if (mobileActions) mobileActions.innerHTML = `
+      <button class="btn-book" onclick="closeNav();openPlatform('patient')">📅 Book Appointment</button>
+      <button class="btn-login" style="background:rgba(230,57,70,.1);color:var(--red);border-color:var(--red);" onclick="closeNav();doLogout()">🚪 Sign Out (${currentUser.firstName})</button>`;
+  } else {
+    // Desktop
+    actions.innerHTML = `
+      <button class="btn-login" id="nav-login-btn" onclick="openLoginModal('login')">Patient Login</button>
+      <button class="btn-book" id="nav-book-btn" onclick="requireLogin()">Book Appointment</button>`;
+    // Mobile
+    if (mobileActions) mobileActions.innerHTML = `
+      <button class="btn-login" onclick="closeNav();openLoginModal('login')">Patient Login</button>
+      <button class="btn-book" onclick="closeNav();requireLogin()">Book Appointment</button>`;
+  }
+}
+
+function toggleUserDropdown(e) {
+  e.stopPropagation();
+  document.getElementById('nav-dropdown')?.classList.toggle('open');
+}
+function closeDropdown() {
+  document.getElementById('nav-dropdown')?.classList.remove('open');
+}
+
 /* ─── MOBILE NAV ─── */
 function toggleNav() {
   const h = document.getElementById('hamburger');
@@ -10,17 +137,208 @@ function closeNav() {
   document.getElementById('hamburger').classList.remove('open');
   document.getElementById('mobile-nav').classList.remove('open');
 }
-// Close nav on outside click
-document.addEventListener('click', function (e) {
-  const h = document.getElementById('hamburger');
-  const n = document.getElementById('mobile-nav');
-  if (!h.contains(e.target) && !n.contains(e.target)) {
-    h.classList.remove('open');
-    n.classList.remove('open');
-  }
-});
+// Close nav & dropdown on outside click — handled in DOMContentLoaded above
 
-/* ─────────── DATA ─────────── */
+/* ═══════════════════════════════════════════════════
+   LOGIN MODAL
+   ═══════════════════════════════════════════════════ */
+function openLoginModal(tab = 'login') {
+  clearLoginErrors();
+  switchAuthTab(tab);
+  document.getElementById('login-overlay').classList.add('show');
+  document.getElementById('lm-success-state').style.display = 'none';
+  document.getElementById('lm-tabs').style.display = 'flex';
+  const lf = document.getElementById('lm-login-form');
+  const rf = document.getElementById('lm-register-form');
+  if (tab === 'login') { lf.style.display = 'block'; rf.style.display = 'none'; }
+  else { lf.style.display = 'none'; rf.style.display = 'block'; }
+  setTimeout(() => {
+    const inp = document.getElementById(tab === 'login' ? 'login-email' : 'reg-fname');
+    if (inp) inp.focus();
+  }, 200);
+}
+function closeLoginModal() {
+  document.getElementById('login-overlay').classList.remove('show');
+  clearLoginErrors();
+}
+function switchAuthTab(tab) {
+  authTab = tab;
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  const lf = document.getElementById('lm-login-form');
+  const rf = document.getElementById('lm-register-form');
+  if (lf) lf.style.display = tab === 'login' ? 'block' : 'none';
+  if (rf) rf.style.display = tab === 'register' ? 'block' : 'none';
+  if (tab === 'login') {
+    document.getElementById('lm-title').textContent = 'Welcome Back';
+    document.getElementById('lm-sub').textContent = 'Sign in to your patient account';
+  } else {
+    document.getElementById('lm-title').textContent = 'Create Account';
+    document.getElementById('lm-sub').textContent = 'Join Meridian Health Platform';
+  }
+  clearLoginErrors();
+}
+function clearLoginErrors() {
+  document.querySelectorAll('.lm-error').forEach(e => e.classList.remove('show'));
+  document.querySelectorAll('.lm-input').forEach(e => e.classList.remove('error'));
+}
+function togglePw(id, btn) {
+  const inp = document.getElementById(id);
+  if (!inp) return;
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+function showForgot() {
+  const emailEl = document.getElementById('login-email');
+  const email = emailEl?.value.trim();
+  if (!email) {
+    showErr('login-email-err', 'Enter your email first');
+    emailEl?.classList.add('error');
+    return;
+  }
+  alert(`📧 Password reset link sent to ${email}\n\nCheck your inbox!`);
+}
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (msg) el.textContent = msg;
+  el.classList.add('show');
+}
+function setLoading(btnId, loading) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.innerHTML = loading ? `<span class="lm-spinner"></span>Processing…` : btn.dataset.orig || btn.innerHTML;
+  if (!loading && btn.dataset.orig) btn.innerHTML = btn.dataset.orig;
+}
+function socialLogin(provider) {
+  // Demo social login — auto-login with demo user
+  showSuccessState(`Signed in with ${provider}`, DEMO_USER);
+}
+
+/* ─── LOGIN ─── */
+function doLogin() {
+  clearLoginErrors();
+  const email = document.getElementById('login-email')?.value.trim();
+  const password = document.getElementById('login-password')?.value;
+  let valid = true;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('login-email')?.classList.add('error');
+    showErr('login-email-err', 'Please enter a valid email address');
+    valid = false;
+  }
+  if (!password || password.length < 4) {
+    document.getElementById('login-password')?.classList.add('error');
+    showErr('login-pw-err', 'Please enter your password');
+    valid = false;
+  }
+  if (!valid) return;
+  const btn = document.getElementById('login-submit-btn');
+  btn.dataset.orig = 'Sign In';
+  setLoading('login-submit-btn', true);
+  setTimeout(() => {
+    setLoading('login-submit-btn', false);
+    // Check demo credentials (or accept any registered user)
+    const registered = getRegisteredUsers();
+    const found = registered.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    if (email.toLowerCase() === DEMO_USER.email.toLowerCase() && password === DEMO_USER.password) {
+      showSuccessState('Welcome back, Rahul!', DEMO_USER);
+    } else if (found) {
+      showSuccessState(`Welcome back, ${found.firstName}!`, found);
+    } else {
+      document.getElementById('login-email')?.classList.add('error');
+      document.getElementById('login-password')?.classList.add('error');
+      showErr('login-pw-err', 'Incorrect email or password. Use patient@meridian.com / Patient@123');
+    }
+  }, 1200);
+}
+
+/* ─── REGISTER ─── */
+function doRegister() {
+  clearLoginErrors();
+  const fname = document.getElementById('reg-fname')?.value.trim();
+  const lname = document.getElementById('reg-lname')?.value.trim();
+  const email = document.getElementById('reg-email')?.value.trim();
+  const phone = document.getElementById('reg-phone')?.value.trim();
+  const password = document.getElementById('reg-password')?.value;
+  let valid = true;
+  if (!fname) { document.getElementById('reg-fname')?.classList.add('error'); showErr('reg-fname-err', 'First name is required'); valid = false; }
+  if (!lname) { document.getElementById('reg-lname')?.classList.add('error'); showErr('reg-lname-err', 'Last name is required'); valid = false; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('reg-email')?.classList.add('error'); showErr('reg-email-err', 'Enter a valid email address'); valid = false; }
+  if (!phone || phone.length < 6) { document.getElementById('reg-phone')?.classList.add('error'); showErr('reg-phone-err', 'Enter a valid phone number'); valid = false; }
+  if (!password || password.length < 8) { document.getElementById('reg-password')?.classList.add('error'); showErr('reg-pw-err', 'Password must be at least 8 characters'); valid = false; }
+  if (!valid) return;
+  const btn = document.getElementById('reg-submit-btn');
+  btn.dataset.orig = 'Create Account';
+  setLoading('reg-submit-btn', true);
+  setTimeout(() => {
+    setLoading('reg-submit-btn', false);
+    const newUser = { name: fname + ' ' + lname, firstName: fname, email, phone, password };
+    // save to registered users
+    const all = getRegisteredUsers();
+    if (all.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+      document.getElementById('reg-email')?.classList.add('error');
+      showErr('reg-email-err', 'This email is already registered. Please sign in.');
+      return;
+    }
+    all.push(newUser);
+    try { sessionStorage.setItem('mh_reg_users', JSON.stringify(all)); } catch (e) { }
+    showSuccessState(`Account created! Welcome, ${fname}!`, newUser);
+  }, 1400);
+}
+function getRegisteredUsers() {
+  try { const d = sessionStorage.getItem('mh_reg_users'); return d ? JSON.parse(d) : []; } catch (e) { return []; }
+}
+
+/* ─── SUCCESS ─── */
+function showSuccessState(title, user) {
+  document.getElementById('lm-login-form').style.display = 'none';
+  document.getElementById('lm-register-form').style.display = 'none';
+  document.getElementById('lm-tabs').style.display = 'none';
+  const ss = document.getElementById('lm-success-state');
+  ss.style.display = 'flex';
+  document.getElementById('lm-success-title').textContent = title;
+  document.getElementById('lm-success-sub').textContent = 'Opening your patient portal…';
+  saveUser(user);
+  renderNavAuth();
+  setTimeout(() => {
+    closeLoginModal();
+    openPlatform('patient');
+  }, 1600);
+}
+
+/* ─── LOGOUT ─── */
+function doLogout() {
+  closeDropdown();
+  closePlatform();
+  clearUser();
+  currentUser = null;
+  renderNavAuth();
+  // Show brief toast
+  showToast('👋 Signed out successfully');
+}
+
+/* ─── REQUIRE LOGIN guard ─── */
+function requireLogin() {
+  if (currentUser) { openPlatform('patient'); }
+  else { openLoginModal('login'); }
+}
+
+/* ─── TOAST ─── */
+function showToast(msg) {
+  let t = document.getElementById('mh-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'mh-toast';
+    t.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:#1a2540;color:#fff;padding:.75rem 1.5rem;border-radius:50px;font-size:.82rem;font-weight:500;z-index:9999;opacity:0;transition:all .3s;box-shadow:0 8px 24px rgba(0,0,0,.2);white-space:nowrap;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  setTimeout(() => { t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)'; }, 10);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 3000);
+}
+
+/* data, state, platform functions below */
 const DAILY = [{ day: 'Mon', d: 3, h: 1, p: 24, paid: 18 }, { day: 'Tue', d: 5, h: 2, p: 31, paid: 22 }, { day: 'Wed', d: 2, h: 1, p: 38, paid: 29 }, { day: 'Thu', d: 7, h: 3, p: 45, paid: 34 }, { day: 'Fri', d: 4, h: 2, p: 52, paid: 41 }, { day: 'Sat', d: 6, h: 1, p: 60, paid: 48 }, { day: 'Sun', d: 3, h: 2, p: 55, paid: 44 }];
 const MONTHLY = [{ m: 'Jan', d: 12, h: 4, p: 180, paid: 132, free: 48 }, { m: 'Feb', d: 18, h: 6, p: 220, paid: 165, free: 55 }, { m: 'Mar', d: 25, h: 8, p: 310, paid: 241, free: 69 }, { m: 'Apr', d: 31, h: 10, p: 390, paid: 298, free: 92 }, { m: 'May', d: 40, h: 13, p: 470, paid: 371, free: 99 }, { m: 'Jun', d: 52, h: 16, p: 560, paid: 430, free: 130 }];
 const HOSPITALS = [{ id: 1, name: 'Meridian Medical Center', city: 'Hyderabad', rating: 4.9, depts: ['Cardiology', 'Neurology', 'Orthopedics'], joined: '2024-01-15' }, { id: 2, name: 'Apollo Health Hub', city: 'Mumbai', rating: 4.7, depts: ['Oncology', 'Pediatrics', 'Pulmonology'], joined: '2024-02-10' }, { id: 3, name: 'City Care Hospital', city: 'Bangalore', rating: 4.5, depts: ['General Medicine', 'Ophthalmology'], joined: '2024-03-05' }, { id: 4, name: 'Sunrise Multispecialty', city: 'Chennai', rating: 4.8, depts: ['Cardiology', 'Orthopedics'], joined: '2024-04-20' }];
@@ -40,6 +358,11 @@ const charts = {};
 
 /* ─────────── OPEN/CLOSE ─────────── */
 function openPlatform(r) {
+  // Patient portal requires login
+  if (r === 'patient' && !currentUser) {
+    openLoginModal('login');
+    return;
+  }
   role = r; bStep = 1; blStep = 1; selH = selD = selT = null;
   aDate = aTime = bDate = bTime = bAddr = ''; bDone = blDone = false; viewRpt = null; patSec = 'home'; adminTab = 'overview';
   document.getElementById('platform-overlay').classList.add('show');
@@ -127,8 +450,21 @@ function renderHosp() {
 
 /* ─────────── PATIENT ─────────── */
 function renderPatient() {
+  const uname = currentUser ? currentUser.name : 'Rahul Sharma';
+  const ufirst = currentUser ? currentUser.firstName : 'Rahul';
+  const uemail = currentUser ? currentUser.email : 'patient@meridian.com';
+  const initials = ufirst.charAt(0).toUpperCase();
   const sideItems = [{ id: 'home', icon: '🏠', lbl: 'Dashboard' }, { id: 'book', icon: '📅', lbl: 'Book Appointment' }, { id: 'blood', icon: '🩸', lbl: 'Book Blood Test' }, { id: 'myappts', icon: '📋', lbl: 'My Appointments' }, { id: 'reports', icon: '📊', lbl: 'My Reports' }];
-  const sidebar = `<div class="p-sidebar"><div class="p-user-info"><div class="p-user-av">👤</div><div><div class="p-user-name">Rahul Sharma</div><div class="p-user-role">Patient</div></div></div>${sideItems.map(s => `<button class="p-side-btn ${patSec === s.id ? 'active' : ''}" onclick="setPatSec('${s.id}')"><span>${s.icon}</span>${s.lbl}</button>`).join('')}</div>`;
+  const sidebar = `<div class="p-sidebar">
+    <div class="p-user-info">
+      <div class="p-user-av" style="font-size:.9rem;font-weight:700;">${initials}</div>
+      <div><div class="p-user-name">${uname}</div><div class="p-user-role" style="font-size:.62rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px;">${uemail}</div></div>
+    </div>
+    ${sideItems.map(s => `<button class="p-side-btn ${patSec === s.id ? 'active' : ''}" onclick="setPatSec('${s.id}')"><span>${s.icon}</span>${s.lbl}</button>`).join('')}
+    <div style="margin-top:auto;padding-top:1rem;border-top:1px solid rgba(255,255,255,.06);margin-top:1.5rem;">
+      <button class="p-side-btn" onclick="doLogout();closePlatform();" style="color:#F87171;"><span>🚪</span>Sign Out</button>
+    </div>
+  </div>`;
   let main = '';
   if (patSec === 'home') main = patHome();
   else if (patSec === 'book') main = bDone ? bookSuccess() : bookFlow();
@@ -139,7 +475,8 @@ function renderPatient() {
 }
 
 function patHome() {
-  return `<h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:#fff;margin-bottom:.25rem">Good Morning, Rahul 👋</h2>
+  const ufirst = currentUser ? currentUser.firstName : 'Rahul';
+  return `<h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:#fff;margin-bottom:.25rem">Good Morning, ${ufirst} 👋</h2>
   <div style="color:#8899bb;font-size:.85rem;margin-bottom:2rem">Your health, always at your fingertips.</div>
   <div class="p-stats-grid" style="grid-template-columns:repeat(3,1fr)">${sc('📅', 'Upcoming Appointments', '2', 'Next: Feb 25', '#3B82F6')}${sc('🩸', 'Blood Tests Done', '2', 'Latest: Feb 10', '#EF4444')}${sc('📊', 'Reports Available', '2', 'All normal', '#00C9A7')}</div>
   <div class="p-chart-card"><div class="p-chart-label">Quick Actions</div>
