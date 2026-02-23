@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KILARI'S Hospitals – Best Multispeciality Hospital in India</title>
+    <title>Meridian Hospitals – Best Multispeciality Hospital in India</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet" />
@@ -34,7 +34,7 @@
         <div class="logo-wrap">
             <div class="logo-icon"></div>
             <div>
-                <div class="logo-name">KILARI'S Hospitals</div>
+                <div class="logo-name">Meridian Hospitals</div>
                 <div class="logo-tagline">Touching Lives · Caring Always</div>
             </div>
         </div>
@@ -51,7 +51,25 @@
             <button class="btn-login" onclick="openPlatform('patient')">Patient Login</button>
             <button class="btn-book" onclick="openPlatform('patient')">Book Appointment</button>
         </div>
+        <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
     </nav>
+
+    <!-- Mobile Nav Drawer -->
+    <div class="mobile-nav" id="mobile-nav">
+        <a href="#" class="nav-link active" onclick="closeNav()">Home</a>
+        <a href="#departments" class="nav-link" onclick="closeNav()">Specialities</a>
+        <a href="#doctors" class="nav-link" onclick="closeNav()">Doctors</a>
+        <a href="#blood" class="nav-link" onclick="closeNav()">Lab Tests</a>
+        <a href="#locations" class="nav-link" onclick="closeNav()">Locations</a>
+        <a href="#" class="nav-link" onclick="closeNav()">Health Plans</a>
+        <a href="#" class="nav-link" onclick="closeNav()">About Us</a>
+        <div class="mobile-nav-actions">
+            <button class="btn-login" onclick="closeNav();openPlatform('patient')">Patient Login</button>
+            <button class="btn-book" onclick="closeNav();openPlatform('patient')">Book Appointment</button>
+        </div>
+    </div>
 
     <!-- ── HERO ── -->
     <section class="hero">
@@ -61,7 +79,7 @@
                 <span>India's Most Trusted Healthcare Network</span>
             </div>
             <h1 class="hero-h1">World-Class Care,<br><em>Close to You.</em></h1>
-            <p class="hero-p">KILARI'S Hospitals brings together 1,200+ specialists, 70+ advanced diagnostic centres,
+            <p class="hero-p">Meridian Hospitals brings together 1,200+ specialists, 70+ advanced diagnostic centres,
                 and 25 years of medical excellence — all committed to your health and healing.</p>
             <div class="hero-actions">
                 <button class="hero-btn-primary" onclick="openPlatform('patient')">📅 Book Appointment</button>
@@ -245,10 +263,10 @@
                 </div>
             </div>
             <div>
-                <div class="sec-eyebrow">Why Choose KILARI'S</div>
+                <div class="sec-eyebrow">Why Choose Meridian</div>
                 <h2 class="sec-title">India's Most <span>Advanced</span> Hospital Network</h2>
                 <p style="font-size:.93rem;color:var(--subtext);line-height:1.75;margin:1rem 0 0;">For 25 years,
-                    KILARI'S has been at the forefront of medical innovation in India. We combine global expertise with
+                    Meridian has been at the forefront of medical innovation in India. We combine global expertise with
                     Indian sensibilities to deliver care that transforms lives.</p>
                 <div class="why-points">
                     <div class="why-point">
@@ -263,7 +281,7 @@
                         <div class="why-point-icon">🌐</div>
                         <div>
                             <div class="why-point-title">45 Hospitals Across India</div>
-                            <div class="why-point-desc">From metro cities to tier-2 towns — KILARI'S is always close to
+                            <div class="why-point-desc">From metro cities to tier-2 towns — Meridian is always close to
                                 you. Seamless patient records and referrals across all our centres.</div>
                         </div>
                     </div>
@@ -280,7 +298,7 @@
                         <div>
                             <div class="why-point-title">Digital Health Ecosystem</div>
                             <div class="why-point-desc">Book appointments, access reports, consult virtually, and manage
-                                your complete health journey on the KILARI'S digital platform.</div>
+                                your complete health journey on the Meridian digital platform.</div>
                         </div>
                     </div>
                 </div>
@@ -338,7 +356,7 @@
                 <div class="doc-info">
                     <div class="doc-name">Dr. Arjun Mehta</div>
                     <div class="doc-spec">Interventional Cardiology</div>
-                    <div class="doc-hosp">🏥 KILARI'S, Hyderabad · Harvard Alumni</div>
+                    <div class="doc-hosp">🏥 Meridian, Hyderabad · Harvard Alumni</div>
                     <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.9</span><span
                             class="rating-cnt">(312)</span><span class="doc-avail">● Available</span></div>
                 </div>
@@ -350,7 +368,7 @@
                 <div class="doc-info">
                     <div class="doc-name">Dr. Priya Nair</div>
                     <div class="doc-spec">Neurosurgery</div>
-                    <div class="doc-hosp">🏥 KILARI'S, Mumbai · Johns Hopkins</div>
+                    <div class="doc-hosp">🏥 Meridian, Mumbai · Johns Hopkins</div>
                     <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.8</span><span
                             class="rating-cnt">(278)</span><span class="doc-avail">● Available</span></div>
                 </div>
@@ -362,7 +380,7 @@
                 <div class="doc-info">
                     <div class="doc-name">Dr. Samuel Osei</div>
                     <div class="doc-spec">Pediatric Oncology</div>
-                    <div class="doc-hosp">🏥 KILARI'S, Bangalore · Mayo Clinic</div>
+                    <div class="doc-hosp">🏥 Meridian, Bangalore · Mayo Clinic</div>
                     <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">5.0</span><span
                             class="rating-cnt">(445)</span><span class="doc-avail">● Available</span></div>
                 </div>
@@ -374,7 +392,7 @@
                 <div class="doc-info">
                     <div class="doc-name">Dr. Ananya Sharma</div>
                     <div class="doc-spec">Robotic Orthopedics</div>
-                    <div class="doc-hosp">🏥 KILARI'S, Chennai · AIIMS Alumni</div>
+                    <div class="doc-hosp">🏥 Meridian, Chennai · AIIMS Alumni</div>
                     <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.7</span><span
                             class="rating-cnt">(189)</span><span class="doc-avail">● Available</span></div>
                 </div>
@@ -486,48 +504,54 @@
                             <div class="bt-name">Complete Blood Count (CBC)</div>
                             <div class="bt-meta">⏱ 24 hrs · 🏅 NABL Certified</div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹299</span><button
-                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                        <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
+                                class="bt-price">₹299</span><button class="bt-book"
+                                onclick="openPlatform('patient')">Book</button></div>
                     </div>
                     <div class="bt-item">
                         <div>
                             <div class="bt-name">Lipid Profile</div>
                             <div class="bt-meta">⏱ 24 hrs · 🏅 NABL Certified</div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹499</span><button
-                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                        <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
+                                class="bt-price">₹499</span><button class="bt-book"
+                                onclick="openPlatform('patient')">Book</button></div>
                     </div>
                     <div class="bt-item">
                         <div>
                             <div class="bt-name">HbA1c (Diabetes Check)</div>
                             <div class="bt-meta">⏱ 24 hrs · 🏅 NABL Certified</div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹599</span><button
-                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                        <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
+                                class="bt-price">₹599</span><button class="bt-book"
+                                onclick="openPlatform('patient')">Book</button></div>
                     </div>
                     <div class="bt-item">
                         <div>
                             <div class="bt-name">Thyroid Panel (TSH, T3, T4)</div>
                             <div class="bt-meta">⏱ 48 hrs · 🏅 NABL Certified</div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹799</span><button
-                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                        <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
+                                class="bt-price">₹799</span><button class="bt-book"
+                                onclick="openPlatform('patient')">Book</button></div>
                     </div>
                     <div class="bt-item">
                         <div>
                             <div class="bt-name">Liver Function Test (LFT)</div>
                             <div class="bt-meta">⏱ 24 hrs · 🏅 NABL Certified</div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹699</span><button
-                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                        <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
+                                class="bt-price">₹699</span><button class="bt-book"
+                                onclick="openPlatform('patient')">Book</button></div>
                     </div>
                     <div class="bt-item">
                         <div>
                             <div class="bt-name">Kidney Function Test (KFT)</div>
                             <div class="bt-meta">⏱ 24 hrs · 🏅 NABL Certified</div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:1rem"><span class="bt-price">₹649</span><button
-                                class="bt-book" onclick="openPlatform('patient')">Book</button></div>
+                        <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0"><span
+                                class="bt-price">₹649</span><button class="bt-book"
+                                onclick="openPlatform('patient')">Book</button></div>
                     </div>
                 </div>
                 <button
@@ -660,7 +684,7 @@
     <div class="cta-band">
         <div>
             <h2 class="cta-title">Your Health. Our Mission.</h2>
-            <p class="cta-sub">Join 5 million patients who trust KILARI'S for their health care journey. Book today.</p>
+            <p class="cta-sub">Join 5 million patients who trust Meridian for their health care journey. Book today.</p>
         </div>
         <div class="cta-actions">
             <button class="cta-btn" onclick="openPlatform('patient')">📅 Book Appointment</button>
@@ -675,7 +699,7 @@
                 <div class="logo-wrap">
                     <div class="logo-icon" style="width:36px;height:36px;"></div>
                     <div>
-                        <div class="logo-name" style="color:#fff;">KILARI'S Hospitals</div>
+                        <div class="logo-name" style="color:#fff;">Meridian Hospitals</div>
                         <div class="logo-tagline" style="color:rgba(0,201,167,.7);">Touching Lives · Caring Always</div>
                     </div>
                 </div>
@@ -724,7 +748,7 @@
             <div>
                 <div class="footer-col-title">Company</div>
                 <ul class="footer-links">
-                    <li><a href="#">About KILARI'S</a></li>
+                    <li><a href="#">About Meridian</a></li>
                     <li><a href="#">Leadership</a></li>
                     <li><a href="#" onclick="openPlatform('hospital')">Hospital Portal</a></li>
                     <li><a href="#" onclick="openPlatform('admin')">Admin Panel</a></li>
@@ -734,7 +758,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 KILARI'S Hospitals Ltd. All rights reserved. | Privacy Policy | Terms of Use</p>
+            <p>© 2025 Meridian Hospitals Ltd. All rights reserved. | Privacy Policy | Terms of Use</p>
             <div class="accred-row">
                 <span class="accred">JCI</span><span class="accred">NABH</span>
                 <span class="accred">ISO 9001</span><span class="accred">NABL</span>
@@ -749,17 +773,17 @@
         <div class="platform-topbar">
             <div class="pt-logo">
                 <div class="pt-cross"></div>
-                <span class="pt-brand">KILARI'S Health Platform</span>
+                <span class="pt-brand">Meridian Health Platform</span>
                 <span class="pt-role-badge" id="pt-role-label">Patient</span>
             </div>
-            <div style="display:flex;gap:.75rem;align-items:center;">
-                <span style="font-size:.75rem;color:rgba(255,255,255,.4);">Switch to:</span>
+            <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;" class="pt-switch-btns">
+                <span style="font-size:.72rem;color:rgba(255,255,255,.4);display:none;" class="sw-label">Switch:</span>
                 <button onclick="openPlatform('admin')"
-                    style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#F59E0B;padding:.3rem .8rem;border-radius:5px;font-size:.72rem;">Admin</button>
+                    style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#F59E0B;padding:.3rem .7rem;border-radius:5px;font-size:.7rem;">Admin</button>
                 <button onclick="openPlatform('hospital')"
-                    style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#60A5FA;padding:.3rem .8rem;border-radius:5px;font-size:.72rem;">Hospital</button>
+                    style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#60A5FA;padding:.3rem .7rem;border-radius:5px;font-size:.7rem;">Hospital</button>
                 <button onclick="openPlatform('patient')"
-                    style="background:rgba(0,201,167,.12);border:1px solid rgba(0,201,167,.3);color:#00C9A7;padding:.3rem .8rem;border-radius:5px;font-size:.72rem;">Patient</button>
+                    style="background:rgba(0,201,167,.12);border:1px solid rgba(0,201,167,.3);color:#00C9A7;padding:.3rem .7rem;border-radius:5px;font-size:.7rem;">Patient</button>
                 <button class="pt-close" onclick="closePlatform()">✕ Close</button>
             </div>
         </div>
@@ -767,7 +791,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════ SCRIPTS -->
-     <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
