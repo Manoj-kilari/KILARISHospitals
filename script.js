@@ -174,7 +174,7 @@ function switchAuthTab(tab) {
     document.getElementById('lm-sub').textContent = 'Sign in to your patient account';
   } else {
     document.getElementById('lm-title').textContent = 'Create Account';
-    document.getElementById('lm-sub').textContent = 'Join Meridian Health Platform';
+    document.getElementById('lm-sub').textContent = 'Join Kilaris Health Platform';
   }
   clearLoginErrors();
 }
