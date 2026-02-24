@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /* ═══════════════════════════════════════════════════
    AUTH STATE
    ═══════════════════════════════════════════════════ */
-const DEMO_USER = { email: 'patient@meridian.com', password: 'Patient@123', name: 'Rahul Sharma', firstName: 'Rahul', phone: '+91 98765 43210' };
+const DEMO_USER = { email: 'patient@kilaris.com', password: 'Patient@123', name: 'Manoj Chowdary', firstName: 'Manoj', phone: '+91 98765 43210' };
 let currentUser = null;
 let authTab = 'login';
 
@@ -174,7 +174,7 @@ function switchAuthTab(tab) {
     document.getElementById('lm-sub').textContent = 'Sign in to your patient account';
   } else {
     document.getElementById('lm-title').textContent = 'Create Account';
-    document.getElementById('lm-sub').textContent = 'Join Kilaris Health Platform';
+    document.getElementById('lm-sub').textContent = 'Join Kilars Health Platform';
   }
   clearLoginErrors();
 }
@@ -248,7 +248,7 @@ function doLogin() {
     } else {
       document.getElementById('login-email')?.classList.add('error');
       document.getElementById('login-password')?.classList.add('error');
-      showErr('login-pw-err', 'Incorrect email or password. Use patient@meridian.com / Patient@123');
+      showErr('login-pw-err', 'Incorrect email or password. Use patient@gmail.com / Patient@123');
     }
   }, 1200);
 }
@@ -341,11 +341,11 @@ function showToast(msg) {
 /* data, state, platform functions below */
 const DAILY = [{ day: 'Mon', d: 3, h: 1, p: 24, paid: 18 }, { day: 'Tue', d: 5, h: 2, p: 31, paid: 22 }, { day: 'Wed', d: 2, h: 1, p: 38, paid: 29 }, { day: 'Thu', d: 7, h: 3, p: 45, paid: 34 }, { day: 'Fri', d: 4, h: 2, p: 52, paid: 41 }, { day: 'Sat', d: 6, h: 1, p: 60, paid: 48 }, { day: 'Sun', d: 3, h: 2, p: 55, paid: 44 }];
 const MONTHLY = [{ m: 'Jan', d: 12, h: 4, p: 180, paid: 132, free: 48 }, { m: 'Feb', d: 18, h: 6, p: 220, paid: 165, free: 55 }, { m: 'Mar', d: 25, h: 8, p: 310, paid: 241, free: 69 }, { m: 'Apr', d: 31, h: 10, p: 390, paid: 298, free: 92 }, { m: 'May', d: 40, h: 13, p: 470, paid: 371, free: 99 }, { m: 'Jun', d: 52, h: 16, p: 560, paid: 430, free: 130 }];
-const HOSPITALS = [{ id: 1, name: 'Meridian Medical Center', city: 'Hyderabad', rating: 4.9, depts: ['Cardiology', 'Neurology', 'Orthopedics'], joined: '2024-01-15' }, { id: 2, name: 'Apollo Health Hub', city: 'Mumbai', rating: 4.7, depts: ['Oncology', 'Pediatrics', 'Pulmonology'], joined: '2024-02-10' }, { id: 3, name: 'City Care Hospital', city: 'Bangalore', rating: 4.5, depts: ['General Medicine', 'Ophthalmology'], joined: '2024-03-05' }, { id: 4, name: 'Sunrise Multispecialty', city: 'Chennai', rating: 4.8, depts: ['Cardiology', 'Orthopedics'], joined: '2024-04-20' }];
-const DOCTORS = [{ id: 1, name: 'Dr. Arjun Mehta', spec: 'Cardiologist', hosp: 'Meridian Medical Center', exp: 18, rating: 4.9, av: true }, { id: 2, name: 'Dr. Priya Nair', spec: 'Neurologist', hosp: 'Apollo Health Hub', exp: 15, rating: 4.8, av: true }, { id: 3, name: 'Dr. Samuel Osei', spec: 'Oncologist', hosp: 'City Care Hospital', exp: 21, rating: 5.0, av: false }, { id: 4, name: 'Dr. Ananya Sharma', spec: 'Orthopedic', hosp: 'Sunrise Multispecialty', exp: 12, rating: 4.7, av: true }];
+const HOSPITALS = [{ id: 1, name: 'Kilaris Medical Center', city: 'Hyderabad', rating: 4.9, depts: ['Cardiology', 'Neurology', 'Orthopedics'], joined: '2024-01-15' }, { id: 2, name: 'Apollo Health Hub', city: 'Mumbai', rating: 4.7, depts: ['Oncology', 'Pediatrics', 'Pulmonology'], joined: '2024-02-10' }, { id: 3, name: 'City Care Hospital', city: 'Bangalore', rating: 4.5, depts: ['General Medicine', 'Ophthalmology'], joined: '2024-03-05' }, { id: 4, name: 'Sunrise Multispecialty', city: 'Chennai', rating: 4.8, depts: ['Cardiology', 'Orthopedics'], joined: '2024-04-20' }];
+const DOCTORS = [{ id: 1, name: 'Dr. Arjun Mehta', spec: 'Cardiologist', hosp: 'Kilaris Medical Center', exp: 18, rating: 4.9, av: true }, { id: 2, name: 'Dr. Priya Nair', spec: 'Neurologist', hosp: 'Apollo Health Hub', exp: 15, rating: 4.8, av: true }, { id: 3, name: 'Dr. Samuel Osei', spec: 'Oncologist', hosp: 'City Care Hospital', exp: 21, rating: 5.0, av: false }, { id: 4, name: 'Dr. Ananya Sharma', spec: 'Orthopedic', hosp: 'Sunrise Multispecialty', exp: 12, rating: 4.7, av: true }];
 const BLOOD_TESTS = [{ id: 1, name: 'Complete Blood Count (CBC)', price: 299, turn: '24 hrs' }, { id: 2, name: 'Lipid Profile', price: 499, turn: '24 hrs' }, { id: 3, name: 'HbA1c (Diabetes)', price: 599, turn: '24 hrs' }, { id: 4, name: 'Thyroid Panel', price: 799, turn: '48 hrs' }, { id: 5, name: 'Liver Function Test', price: 699, turn: '24 hrs' }, { id: 6, name: 'Kidney Function Test', price: 649, turn: '24 hrs' }];
 const REPORTS = [{ id: 'RPT-001', test: 'Complete Blood Count (CBC)', date: '2025-02-10', status: 'Normal', res: [{ p: 'Hemoglobin', v: '14.2 g/dL', r: '13.5–17.5 g/dL', s: 'Normal' }, { p: 'RBC Count', v: '5.1 M/µL', r: '4.5–5.9 M/µL', s: 'Normal' }, { p: 'WBC Count', v: '7200 /µL', r: '4500–11000 /µL', s: 'Normal' }, { p: 'Platelets', v: '285000 /µL', r: '150000–400000', s: 'Normal' }] }, { id: 'RPT-002', test: 'Lipid Profile', date: '2025-01-22', status: 'Borderline', res: [{ p: 'Total Cholesterol', v: '215 mg/dL', r: '<200 mg/dL', s: 'High' }, { p: 'LDL', v: '138 mg/dL', r: '<100 mg/dL', s: 'High' }, { p: 'HDL', v: '52 mg/dL', r: '>40 mg/dL', s: 'Normal' }, { p: 'Triglycerides', v: '145 mg/dL', r: '<150 mg/dL', s: 'Normal' }] }];
-const MY_APPTS = [{ hosp: 'Meridian Medical Center', doc: 'Dr. Arjun Mehta', date: '2025-02-25', time: '10:30 AM', status: 'Confirmed', type: 'Cardiology' }, { hosp: 'Apollo Health Hub', doc: 'Dr. Priya Nair', date: '2025-03-10', time: '2:00 PM', status: 'Pending', type: 'Neurology' }];
+const MY_APPTS = [{ hosp: 'Kilaris Medical Center', doc: 'Dr. Arjun Mehta', date: '2025-02-25', time: '10:30 AM', status: 'Confirmed', type: 'Cardiology' }, { hosp: 'Apollo Health Hub', doc: 'Dr. Priya Nair', date: '2025-03-10', time: '2:00 PM', status: 'Pending', type: 'Neurology' }];
 const MY_BLOOD = [{ test: 'CBC', date: '2025-02-10', time: '8:00 AM', status: 'Report Ready', rpt: 'RPT-001' }, { test: 'Lipid Profile', date: '2025-01-22', time: '9:00 AM', status: 'Report Ready', rpt: 'RPT-002' }];
 
 /* ─────────── STATE ─────────── */
@@ -436,7 +436,7 @@ function renderAdmin() {
 
 /* ─────────── HOSPITAL ─────────── */
 function renderHosp() {
-  return `<div class="p-pad">${CC}<div class="p-sec-title">Hospital Dashboard</div><div class="p-sec-sub">Meridian Medical Center</div>
+  return `<div class="p-pad">${CC}<div class="p-sec-title">Hospital Dashboard</div><div class="p-sec-sub">Kilaris Medical Center</div>
   <div class="p-stats-grid">${sc('📅', "Today's Appointments", '12', '4 pending', '#3B82F6')}${sc('👥', 'Total Patients', '3,240', '+24 this week', '#F59E0B')}${sc('💳', 'Paid Patients', '2,680', '82.7% paid', '#00C9A7')}${sc('👨‍⚕️', 'Active Doctors', '18', '2 on leave', '#EC4899')}</div>
   <div class="p-grid-eq">
     <div class="p-chart-card"><div class="p-chart-label">Weekly Appointment Trends</div><canvas id="ch1" height="140"></canvas></div>
@@ -450,9 +450,9 @@ function renderHosp() {
 
 /* ─────────── PATIENT ─────────── */
 function renderPatient() {
-  const uname = currentUser ? currentUser.name : 'Rahul Sharma';
-  const ufirst = currentUser ? currentUser.firstName : 'Rahul';
-  const uemail = currentUser ? currentUser.email : 'patient@meridian.com';
+  const uname = currentUser ? currentUser.name : 'Manoj Chowdary';
+  const ufirst = currentUser ? currentUser.firstName : 'Manoj';
+  const uemail = currentUser ? currentUser.email : 'patient@gmail.com';
   const initials = ufirst.charAt(0).toUpperCase();
   const sideItems = [{ id: 'home', icon: '🏠', lbl: 'Dashboard' }, { id: 'book', icon: '📅', lbl: 'Book Appointment' }, { id: 'blood', icon: '🩸', lbl: 'Book Blood Test' }, { id: 'myappts', icon: '📋', lbl: 'My Appointments' }, { id: 'reports', icon: '📊', lbl: 'My Reports' }];
   const sidebar = `<div class="p-sidebar">
