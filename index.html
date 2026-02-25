@@ -13,8 +13,62 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-<!-- ── EMERGENCY TOPBAR ── -->
+
+<body class="splash-active">
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- SPLASH SCREEN                                  -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <div class="splash-logo-wrap">
+                <svg class="splash-logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="sl1" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#0057A8" />
+                            <stop offset="1" stop-color="#0099CC" />
+                        </linearGradient>
+                        <linearGradient id="sl2" x1="1" y1="0" x2="0" y2="1">
+                            <stop offset="0" stop-color="#6B2FEE" />
+                            <stop offset="1" stop-color="#0073CF" />
+                        </linearGradient>
+                        <linearGradient id="sl3" x1="0" y1="1" x2="1" y2="0">
+                            <stop offset="0" stop-color="#00A89D" />
+                            <stop offset="1" stop-color="#0057A8" />
+                        </linearGradient>
+                        <linearGradient id="sl4" x1="1" y1="1" x2="0" y2="0">
+                            <stop offset="0" stop-color="#00C9A7" />
+                            <stop offset="1" stop-color="#6B2FEE" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M29 29 C24 22 16 16 12 12 C8 8 8 14 12 17 C16 20 22 24 28 30" stroke="url(#sl1)"
+                        stroke-width="7" stroke-linecap="round" fill="none" />
+                    <circle cx="12" cy="13" r="5" fill="#0057A8" />
+                    <path d="M35 29 C40 22 48 16 52 12 C56 8 56 14 52 17 C48 20 42 24 36 30" stroke="url(#sl2)"
+                        stroke-width="7" stroke-linecap="round" fill="none" />
+                    <circle cx="52" cy="13" r="5" fill="#6B2FEE" />
+                    <path d="M29 35 C24 42 16 48 12 52 C8 56 14 56 17 52 C20 48 24 42 30 36" stroke="url(#sl3)"
+                        stroke-width="7" stroke-linecap="round" fill="none" />
+                    <circle cx="13" cy="52" r="5" fill="#00A89D" />
+                    <path d="M35 35 C40 42 48 48 52 52 C56 56 56 50 52 47 C48 44 42 40 36 36" stroke="url(#sl4)"
+                        stroke-width="7" stroke-linecap="round" fill="none" />
+                    <circle cx="52" cy="52" r="5" fill="#00C9A7" />
+                    <circle cx="32" cy="32" r="11" fill="white" />
+                    <text x="32" y="37" text-anchor="middle" font-family="Georgia,serif" font-size="13"
+                        font-weight="bold" fill="#0057A8">K</text>
+                </svg>
+                <div class="splash-pulse-ring"></div>
+                <div class="splash-pulse-ring-2"></div>
+            </div>
+            <div class="splash-brand">Kilari's Hospitals</div>
+            <div class="splash-tagline">Touching Lives · Caring Always</div>
+            <div class="splash-loader">
+                <div class="splash-loader-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── EMERGENCY TOPBAR ── -->
     <div id="topbar">
         <div class="topbar-links">
             <a href="#">Find a Doctor</a>
@@ -32,7 +86,7 @@
     <!-- ── NAVBAR ── -->
     <nav>
         <div class="logo-wrap">
-            <svg class="logo-icon" width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" >
+            <svg class="logo-icon" width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <linearGradient id="nl1" x1="0" y1="0" x2="1" y2="1">
                         <stop offset="0" stop-color="#0057A8" />
@@ -116,6 +170,26 @@
             <p class="hero-p">Kilari's Hospitals brings together 1,200+ specialists, 70+ advanced diagnostic centres,
                 and 25 years of medical excellence — all committed to your health and healing.</p>
             <div class="hero-actions">
+                <div class="hero-search">
+                    <input class="hero-search-input" type="text" placeholder="Search doctors, departments, conditions…"
+                        id="hero-search-input" />
+                    <button class="hero-search-btn" onclick="requireLogin()">🔍 Search</button>
+                </div>
+            </div>
+            <div class="hero-search-tags">
+                <span class="search-tag"
+                    onclick="document.getElementById('hero-search-input').value=this.textContent.trim()">Cardiologist</span>
+                <span class="search-tag"
+                    onclick="document.getElementById('hero-search-input').value=this.textContent.trim()">Neurologist</span>
+                <span class="search-tag"
+                    onclick="document.getElementById('hero-search-input').value=this.textContent.trim()">Orthopedics</span>
+                <span class="search-tag"
+                    onclick="document.getElementById('hero-search-input').value=this.textContent.trim()">Diabetes</span>
+                <span class="search-tag"
+                    onclick="document.getElementById('hero-search-input').value=this.textContent.trim()">Cancer
+                    Care</span>
+            </div>
+            <div class="hero-actions" style="margin-bottom:0">
                 <button class="hero-btn-primary" onclick="requireLogin()">📅 Book Appointment</button>
                 <button class="hero-btn-outline" onclick="requireLogin()">🩸 Book Lab Test at Home</button>
             </div>
@@ -176,11 +250,23 @@
 
     <!-- ── TICKER ── -->
     <div class="ticker">
-        <div class="ticker-item">🏆 Ranked #1 Hospital Network in India 2024</div>
-        <div class="ticker-item">🆕 New Robotic Surgery Centre Open in Hyderabad</div>
-        <div class="ticker-item">💉 Free Health Camps every Sunday · Register Now</div>
-        <div class="ticker-item">🔬 NABL Accredited Labs · Results in 4–24 Hours</div>
-        <div class="ticker-item">🌐 45 Hospitals · 200+ Clinics Across India</div>
+        <div class="ticker-track">
+            <div class="ticker-item">🏆 Ranked #1 Hospital Network in India 2024</div>
+            <div class="ticker-item">🆕 New Robotic Surgery Centre Open in Hyderabad</div>
+            <div class="ticker-item">💉 Free Health Camps every Sunday · Register Now</div>
+            <div class="ticker-item">🔬 NABL Accredited Labs · Results in 4–24 Hours</div>
+            <div class="ticker-item">🌐 45 Hospitals · 200+ Clinics Across India</div>
+            <div class="ticker-item">🤖 AI-Powered Diagnostics Now Available</div>
+            <div class="ticker-item">🏅 JCI Accredited · NABH & ISO Certified</div>
+            <!-- duplicate for seamless loop -->
+            <div class="ticker-item">🏆 Ranked #1 Hospital Network in India 2024</div>
+            <div class="ticker-item">🆕 New Robotic Surgery Centre Open in Hyderabad</div>
+            <div class="ticker-item">💉 Free Health Camps every Sunday · Register Now</div>
+            <div class="ticker-item">🔬 NABL Accredited Labs · Results in 4–24 Hours</div>
+            <div class="ticker-item">🌐 45 Hospitals · 200+ Clinics Across India</div>
+            <div class="ticker-item">🤖 AI-Powered Diagnostics Now Available</div>
+            <div class="ticker-item">🏅 JCI Accredited · NABH & ISO Certified</div>
+        </div>
     </div>
 
     <!-- ── SPECIALITIES ── -->
@@ -387,6 +473,8 @@
                 <div class="doc-photo dp-1">
                     <div class="doc-avatar">👨‍⚕️</div><span class="doc-exp-badge">18 yrs</span>
                 </div>
+                <div class="doc-book-overlay"><button class="doc-book-btn" onclick="requireLogin()">📅 Book
+                        Appointment</button></div>
                 <div class="doc-info">
                     <div class="doc-name">Dr. Arjun Mehta</div>
                     <div class="doc-spec">Interventional Cardiology</div>
@@ -399,6 +487,8 @@
                 <div class="doc-photo dp-2">
                     <div class="doc-avatar">👩‍⚕️</div><span class="doc-exp-badge">15 yrs</span>
                 </div>
+                <div class="doc-book-overlay"><button class="doc-book-btn" onclick="requireLogin()">📅 Book
+                        Appointment</button></div>
                 <div class="doc-info">
                     <div class="doc-name">Dr. Priya Nair</div>
                     <div class="doc-spec">Neurosurgery</div>
@@ -411,6 +501,8 @@
                 <div class="doc-photo dp-3">
                     <div class="doc-avatar">👨‍⚕️</div><span class="doc-exp-badge">21 yrs</span>
                 </div>
+                <div class="doc-book-overlay"><button class="doc-book-btn" onclick="requireLogin()">📅 Book
+                        Appointment</button></div>
                 <div class="doc-info">
                     <div class="doc-name">Dr. Samuel Osei</div>
                     <div class="doc-spec">Pediatric Oncology</div>
@@ -423,6 +515,8 @@
                 <div class="doc-photo dp-4">
                     <div class="doc-avatar">👩‍⚕️</div><span class="doc-exp-badge">12 yrs</span>
                 </div>
+                <div class="doc-book-overlay"><button class="doc-book-btn" onclick="requireLogin()">📅 Book
+                        Appointment</button></div>
                 <div class="doc-info">
                     <div class="doc-name">Dr. Ananya Sharma</div>
                     <div class="doc-spec">Robotic Orthopedics</div>
@@ -780,6 +874,13 @@
                     <div class="social-btn">📸</div>
                     <div class="social-btn">▶️</div>
                 </div>
+                <div class="footer-newsletter">
+                    <div class="footer-newsletter-title">Subscribe to Health Tips</div>
+                    <div class="footer-nl-row">
+                        <input class="footer-nl-input" type="email" placeholder="your@email.com" id="nl-email" />
+                        <button class="footer-nl-btn" onclick="subscribeNewsletter()">Subscribe</button>
+                    </div>
+                </div>
             </div>
             <div>
                 <div class="footer-col-title">Services</div>
@@ -835,9 +936,10 @@
         </div>
     </footer>
 
-    <!-- ═══════════════════════════════════════════════ -->
-    <!-- LOGIN / REGISTER MODAL                        -->
-    <!-- ═══════════════════════════════════════════════ -->
+    <!-- BACK TO TOP -->
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+    <!-- LOGIN / REGISTER MODAL -->
     <div id="login-overlay">
         <div class="login-modal" id="login-modal">
             <div class="lm-header">
@@ -988,9 +1090,7 @@
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════ -->
-    <!-- PLATFORM MODAL OVERLAY                        -->
-    <!-- ═══════════════════════════════════════════════ -->
+    <!-- PLATFORM MODAL OVERLAY -->
     <div id="platform-overlay">
         <div class="platform-topbar">
             <div class="pt-logo">
@@ -1045,7 +1145,6 @@
         </div>
         <div id="platform-content"></div>
     </div>
-
     <script src="script.js"></script>
 </body>
 

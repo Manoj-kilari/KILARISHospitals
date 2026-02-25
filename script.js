@@ -1,4 +1,5 @@
 
+
 /* ═══════════════════════════════════════════════════
    INIT – wire up static buttons after DOM is ready
    ═══════════════════════════════════════════════════ */
@@ -137,7 +138,6 @@ function closeNav() {
   document.getElementById('hamburger').classList.remove('open');
   document.getElementById('mobile-nav').classList.remove('open');
 }
-// Close nav & dropdown on outside click — handled in DOMContentLoaded above
 
 /* ═══════════════════════════════════════════════════
    LOGIN MODAL
@@ -212,7 +212,6 @@ function setLoading(btnId, loading) {
   if (!loading && btn.dataset.orig) btn.innerHTML = btn.dataset.orig;
 }
 function socialLogin(provider) {
-  // Demo social login — auto-login with demo user
   showSuccessState(`Signed in with ${provider}`, DEMO_USER);
 }
 
@@ -238,7 +237,6 @@ function doLogin() {
   setLoading('login-submit-btn', true);
   setTimeout(() => {
     setLoading('login-submit-btn', false);
-    // Check demo credentials (or accept any registered user)
     const registered = getRegisteredUsers();
     const found = registered.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
     if (email.toLowerCase() === DEMO_USER.email.toLowerCase() && password === DEMO_USER.password) {
@@ -274,7 +272,6 @@ function doRegister() {
   setTimeout(() => {
     setLoading('reg-submit-btn', false);
     const newUser = { name: fname + ' ' + lname, firstName: fname, email, phone, password };
-    // save to registered users
     const all = getRegisteredUsers();
     if (all.find(u => u.email.toLowerCase() === email.toLowerCase())) {
       document.getElementById('reg-email')?.classList.add('error');
@@ -314,7 +311,6 @@ function doLogout() {
   clearUser();
   currentUser = null;
   renderNavAuth();
-  // Show brief toast
   showToast('👋 Signed out successfully');
 }
 
@@ -358,7 +354,6 @@ const charts = {};
 
 /* ─────────── OPEN/CLOSE ─────────── */
 function openPlatform(r) {
-  // Patient portal requires login
   if (r === 'patient' && !currentUser) {
     openLoginModal('login');
     return;
@@ -581,3 +576,122 @@ function renderCharts() {
     mc('ch2', { type: 'line', data: { labels: MONTHLY.map(d => d.m), datasets: [{ label: 'Paid Patients', data: MONTHLY.map(d => d.paid), borderColor: '#00C9A7', backgroundColor: 'rgba(0,201,167,.1)', fill: true, tension: .4, borderWidth: 2.5 }] }, options: { ...CD, responsive: true } });
   }
 }
+
+
+/* ── 1. STICKY NAV SCROLL EFFECT ── */
+(function () {
+  var nav = document.querySelector('nav');
+  window.addEventListener('scroll', function () {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+})();
+
+/* ── 2. BACK TO TOP BUTTON ── */
+(function () {
+  var btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', function () {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+})();
+
+/* ── 3. SCROLL SPY NAV LINKS ── */
+(function () {
+  var sections = [
+    { id: 'departments', link: '[href="#departments"]' },
+    { id: 'doctors', link: '[href="#doctors"]' },
+    { id: 'blood', link: '[href="#blood"]' },
+    { id: 'locations', link: '[href="#locations"]' }
+  ];
+  function onScroll() {
+    var scrollY = window.scrollY + 120;
+    sections.forEach(function (s) {
+      var el = document.getElementById(s.id);
+      var lnk = document.querySelector('.nav-menu ' + s.link);
+      if (!el || !lnk) return;
+      var inView = scrollY >= el.offsetTop && scrollY < el.offsetTop + el.offsetHeight;
+      lnk.classList.toggle('spy-active', inView);
+      lnk.classList.toggle('active', inView);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+/* ── 4. SCROLL REVEAL (Intersection Observer) ── */
+(function () {
+  var targets = document.querySelectorAll(
+    '.spec-card, .doc-card, .svc-card, .bt-item, .testi-card, .loc-card, ' +
+    '.why-point, .blood-feat, .num-item, .hstat, .p-stat'
+  );
+  var delays = ['', 'reveal-delay-1', 'reveal-delay-2', 'reveal-delay-3', 'reveal-delay-4', 'reveal-delay-5'];
+  targets.forEach(function (el, i) {
+    el.classList.add('reveal');
+    if (i % 6 !== 0) el.classList.add(delays[i % 6]);
+  });
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  targets.forEach(function (el) { observer.observe(el); });
+})();
+
+/* ── 5. SECTION TITLE REVEALS ── */
+(function () {
+  var headers = document.querySelectorAll('.sec-header, .why-grid > div:last-child, .blood-grid > div:first-child');
+  headers.forEach(function (el) {
+    el.classList.add('reveal');
+  });
+  var observer2 = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer2.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  headers.forEach(function (el) { observer2.observe(el); });
+})();
+
+/* ── 6. NEWSLETTER SUBSCRIBE ── */
+function subscribeNewsletter() {
+  var email = document.getElementById('nl-email').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast('⚠️ Please enter a valid email address');
+    return;
+  }
+  document.getElementById('nl-email').value = '';
+  showToast('✅ Subscribed! You\'ll receive health tips at ' + email);
+}
+
+/* ── 7. HERO SEARCH ENTER KEY ── */
+document.addEventListener('DOMContentLoaded', function () {
+  var inp = document.getElementById('hero-search-input');
+  if (inp) {
+    inp.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') requireLogin();
+    });
+  }
+});
+
+
+
+
+(function () {
+  // Show splash for 3 seconds, then fade out and reveal site
+  var SPLASH_DURATION = 3000; // 3 seconds total display time
+  var FADE_DURATION = 700;  // matches CSS transition duration
+
+  var splash = document.getElementById('splash-screen');
+
+  // After SPLASH_DURATION ms, start the fade-out
+  setTimeout(function () {
+    splash.classList.add('hide');
+    // After fade completes, remove from DOM and restore scroll
+    setTimeout(function () {
+      splash.style.display = 'none';
+      document.body.classList.remove('splash-active');
+    }, FADE_DURATION);
+  }, SPLASH_DURATION);
+})();
