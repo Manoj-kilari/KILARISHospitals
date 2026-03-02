@@ -3915,6 +3915,14 @@ body.splash-active {
         grid-template-columns: 1fr 1fr;
     }
 }
+#topbar{
+    background: var(--dark);
+    padding: .45rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .75rem;
+}
 
 /* ── MOBILE (up to 767px) ─────────────────────────── */
 @media(max-width:767px) {
