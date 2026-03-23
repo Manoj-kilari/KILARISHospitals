@@ -67,7 +67,8 @@ document.addEventListener('DOMContentLoaded', function () {
 /* ═══════════════════════════════════════════════════
    AUTH STATE
    ═══════════════════════════════════════════════════ */
-const DEMO_USER = { email: 'patient@kilaris.com', password: 'Patient@123', name: 'Manoj Chowdary', firstName: 'Manoj', phone: '+91 98765 43210' };
+// Production: Remove demo credentials for live deployment
+// const DEMO_USER = { email: 'patient@kilaris.com', password: 'Patient@123', name: 'Manoj Chowdary', firstName: 'Manoj', phone: '+91 98765 43210' };
 let currentUser = null;
 let authTab = 'login';
 
@@ -212,7 +213,9 @@ function setLoading(btnId, loading) {
   if (!loading && btn.dataset.orig) btn.innerHTML = btn.dataset.orig;
 }
 function socialLogin(provider) {
-  showSuccessState(`Signed in with ${provider}`, DEMO_USER);
+  // Production: Implement proper OAuth integration
+  showSuccessState(`Signing in with ${provider}...`, null);
+  // TODO: Integrate with real OAuth providers
 }
 
 /* ─── LOGIN ─── */
@@ -239,14 +242,16 @@ function doLogin() {
     setLoading('login-submit-btn', false);
     const registered = getRegisteredUsers();
     const found = registered.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
-    if (email.toLowerCase() === DEMO_USER.email.toLowerCase() && password === DEMO_USER.password) {
-      showSuccessState('Welcome back, Rahul!', DEMO_USER);
-    } else if (found) {
+    // Production: Remove demo credentials check
+    // if (email.toLowerCase() === DEMO_USER.email.toLowerCase() && password === DEMO_USER.password) {
+    //   showSuccessState('Welcome back, Rahul!', DEMO_USER);
+    // } else 
+    if (found) {
       showSuccessState(`Welcome back, ${found.firstName}!`, found);
     } else {
       document.getElementById('login-email')?.classList.add('error');
       document.getElementById('login-password')?.classList.add('error');
-      showErr('login-pw-err', 'Incorrect email or password. Use patient@gmail.com / Patient@123');
+      showErr('login-pw-err', 'Incorrect email or password. Please try again.');
     }
   }, 1200);
 }
@@ -447,7 +452,7 @@ function renderHosp() {
 function renderPatient() {
   const uname = currentUser ? currentUser.name : 'Manoj Chowdary';
   const ufirst = currentUser ? currentUser.firstName : 'Manoj';
-  const uemail = currentUser ? currentUser.email : 'patient@gmail.com';
+  const uemail = currentUser ? currentUser.email : 'patient@example.com';
   const initials = ufirst.charAt(0).toUpperCase();
   const sideItems = [{ id: 'home', icon: '🏠', lbl: 'Dashboard' }, { id: 'book', icon: '📅', lbl: 'Book Appointment' }, { id: 'blood', icon: '🩸', lbl: 'Book Blood Test' }, { id: 'myappts', icon: '📋', lbl: 'My Appointments' }, { id: 'reports', icon: '📊', lbl: 'My Reports' }];
   const sidebar = `<div class="p-sidebar">

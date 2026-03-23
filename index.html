@@ -5,7 +5,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="./favicon.png" type="image/svg+xml">
-    <title>Kilari's Hospitals – Best Multispeciality Hospital in India</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>Kilari's Hospitals – Best Multispeciality Hospital in India | JCI Accredited</title>
+    <meta name="description" content="Kilari's Hospitals - India's leading multispeciality hospital network. 25+ years of excellence, 45+ hospitals, JCI & NABH accredited. 24/7 emergency care, expert doctors, advanced treatments.">
+    <meta name="keywords" content="Kilari's Hospitals, multispeciality hospital India, best hospital India, JCI accredited hospital, NABH certified, emergency care, cardiology, neurology, oncology, orthopedics, healthcare India">
+    <meta name="author" content="Kilari's Hospitals Ltd.">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Kilari's Hospitals – Best Multispeciality Hospital in India">
+    <meta property="og:description" content="India's most trusted healthcare network with 25+ years of excellence. JCI accredited, 45+ hospitals nationwide.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kilarishospitals.com">
+    <meta property="og:image" content="./favicon.png">
+    <meta property="og:site_name" content="Kilari's Hospitals">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Kilari's Hospitals – Best Multispeciality Hospital in India">
+    <meta name="twitter:description" content="India's leading healthcare provider with 25+ years of excellence. JCI accredited, 45+ hospitals nationwide.">
+    <meta name="twitter:image" content="./favicon.png">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#0057A8">
+    <meta name="msapplication-TileColor" content="#0057A8">
+    <link rel="canonical" href="https://kilarishospitals.com">
+    
+    <!-- Fonts and Scripts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet" />
@@ -38,10 +65,10 @@
     <!-- ── EMERGENCY TOPBAR ── -->
     <div id="topbar">
         <div class="topbar-links">
-            <a href="#">Find a Doctor</a>
-            <a href="#">Find a Hospital</a>
-            <a href="#">Book Lab Test</a>
-            <a href="#">Health Records</a>
+            <a href="#" onclick="requireLogin()">Find a Doctor</a>
+            <a href="#locations">Find a Hospital</a>
+            <a href="#blood" onclick="requireLogin()">Book Lab Test</a>
+            <a href="#" onclick="requireLogin()">Health Records</a>
             <a href="#">Insurance</a>
         </div>
         <div class="topbar-right">
@@ -212,7 +239,7 @@
                 <p class="sec-sub">Covering 40+ specialities with expert doctors, cutting-edge technology, and
                     compassionate care.</p>
             </div>
-            <a href="#" class="see-all">View All Specialities →</a>
+            <a href="#" class="see-all" onclick="requireLogin()">View All Specialities →</a>
         </div>
         <div class="spec-grid">
             <div class="spec-card"><span class="spec-icon">❤️</span>
@@ -402,9 +429,23 @@
                 <p class="sec-sub">Internationally trained specialists delivering compassionate, evidence-based care.
                 </p>
             </div>
-            <a href="#" class="see-all">View All Doctors →</a>
+            <a href="#" class="see-all" onclick="requireLogin()">View All Doctors →</a>
         </div>
         <div class="doctors-grid">
+              <div class="doc-card">
+                <div class="doc-photo dp-2">
+                    <div class="doc-avatar">👩‍⚕️</div><span class="doc-exp-badge">15 yrs</span>
+                </div>
+                <div class="doc-book-overlay"><button class="doc-book-btn" onclick="requireLogin()">📅 Book
+                        Appointment</button></div>
+                <div class="doc-info">
+                    <div class="doc-name">Dr. Sushma Reddy</div>
+                    <div class="doc-spec">Psychologist</div>
+                    <div class="doc-hosp">🏥 Kilari's, Proddatur  · Johns Hopkins</div>
+                    <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.8</span><span
+                            class="rating-cnt">(278)</span><span class="doc-avail">● Available</span></div>
+                </div>
+            </div>
             <div class="doc-card">
                 <div class="doc-photo dp-1">
                     <div class="doc-avatar">👨‍⚕️</div><span class="doc-exp-badge">18 yrs</span>
@@ -419,20 +460,7 @@
                             class="rating-cnt">(312)</span><span class="doc-avail">● Available</span></div>
                 </div>
             </div>
-            <div class="doc-card">
-                <div class="doc-photo dp-2">
-                    <div class="doc-avatar">👩‍⚕️</div><span class="doc-exp-badge">15 yrs</span>
-                </div>
-                <div class="doc-book-overlay"><button class="doc-book-btn" onclick="requireLogin()">📅 Book
-                        Appointment</button></div>
-                <div class="doc-info">
-                    <div class="doc-name">Dr. Priya Nair</div>
-                    <div class="doc-spec">Neurosurgery</div>
-                    <div class="doc-hosp">🏥 Kilari's, Mumbai · Johns Hopkins</div>
-                    <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-val">4.8</span><span
-                            class="rating-cnt">(278)</span><span class="doc-avail">● Available</span></div>
-                </div>
-            </div>
+          
             <div class="doc-card">
                 <div class="doc-photo dp-3">
                     <div class="doc-avatar">👨‍⚕️</div><span class="doc-exp-badge">21 yrs</span>
@@ -688,7 +716,7 @@
                 <p class="sec-sub">World-class care available in every major city and growing fast into tier-2 India.
                 </p>
             </div>
-            <a href="#" class="see-all">Find Nearest Hospital →</a>
+            <a href="#locations" class="see-all">Find Nearest Hospital →</a>
         </div>
         <div class="locations-grid">
             <div class="loc-card">
@@ -877,6 +905,33 @@
                 </div>
             </div>
             
+            <!-- ── LEADERSHIP TEAM ── -->
+            <div class="about-leadership">
+                <h3>Our Leadership</h3>
+                <div class="leadership-grid">
+                    <div class="leader-card">
+                        <div class="leader-photo">
+                            <img src="./HarikrishnaChowdary.jpeg" alt="Hari Krishna Chowdary" class="leader-img">
+                        </div>
+                        <div class="leader-info">
+                            <h4>Hari Krishna Chowdary</h4>
+                            <p class="leader-title">Founder</p>
+                            <p class="leader-desc">A visionary healthcare entrepreneur with over 25 years of experience in hospital management and healthcare innovation. Hari Krishna has been instrumental in establishing Kilari's Hospitals as a leader in multi-speciality healthcare, focusing on patient-centric care and technological advancement.</p>
+                        </div>
+                    </div>
+                    <div class="leader-card">
+                        <div class="leader-photo">
+                            <img src="./ManojChowdary.jpeg" alt="Manoj Chowdary" class="leader-img">
+                        </div>
+                        <div class="leader-info">
+                            <h4>ManojKumar Chowdary</h4>
+                            <p class="leader-title">Co-Founder</p>
+                            <p class="leader-desc">A dynamic leader with extensive expertise in healthcare operations and strategic management. Under Manoj's leadership, Kilari's Hospitals has expanded to 45+ locations and achieved international accreditations. His commitment to quality healthcare and innovation continues to drive the organization's growth and excellence.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="about-achievements">
                 <h3>Accreditations & Achievements</h3>
                 <div class="achievements-list">
@@ -977,23 +1032,23 @@
             <div>
                 <div class="footer-col-title">Services</div>
                 <ul class="footer-links">
-                    <li><a href="#">Emergency Care</a></li>
-                    <li><a href="#">OPD Consultation</a></li>
-                    <li><a href="#">Diagnostics</a></li>
-                    <li><a href="#">Surgery</a></li>
-                    <li><a href="#">Lab Tests</a></li>
-                    <li><a href="#">Teleconsult</a></li>
+                    <li><a href="#" onclick="requireLogin()">Emergency Care</a></li>
+                    <li><a href="#" onclick="requireLogin()">OPD Consultation</a></li>
+                    <li><a href="#blood" onclick="requireLogin()">Diagnostics</a></li>
+                    <li><a href="#" onclick="requireLogin()">Surgery</a></li>
+                    <li><a href="#blood" onclick="requireLogin()">Lab Tests</a></li>
+                    <li><a href="#" onclick="requireLogin()">Teleconsult</a></li>
                 </ul>
             </div>
             <div>
                 <div class="footer-col-title">Specialities</div>
                 <ul class="footer-links">
-                    <li><a href="#">Cardiology</a></li>
-                    <li><a href="#">Neurology</a></li>
-                    <li><a href="#">Oncology</a></li>
-                    <li><a href="#">Orthopedics</a></li>
-                    <li><a href="#">Pediatrics</a></li>
-                    <li><a href="#">Transplants</a></li>
+                    <li><a href="#departments" onclick="requireLogin()">Cardiology</a></li>
+                    <li><a href="#departments" onclick="requireLogin()">Neurology</a></li>
+                    <li><a href="#departments" onclick="requireLogin()">Oncology</a></li>
+                    <li><a href="#departments" onclick="requireLogin()">Orthopedics</a></li>
+                    <li><a href="#departments" onclick="requireLogin()">Pediatrics</a></li>
+                    <li><a href="#departments" onclick="requireLogin()">Transplants</a></li>
                 </ul>
             </div>
             <div>
@@ -1020,12 +1075,13 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 Kilari's Hospitals Ltd. All rights reserved. | Privacy Policy | Terms of Use</p>
+            <p>© 2026 Kilari's Hospitals Ltd. All rights reserved. | Privacy Policy | Terms of Use</p>
             <div class="accred-row">
                 <span class="accred">JCI</span><span class="accred">NABH</span>
                 <span class="accred">ISO 9001</span><span class="accred">NABL</span>
             </div>
         </div>
+        <marquee behavior="scroll" direction="right" style="color: white; position: relative; top: 27px;"><span style="animation: blink 1s infinite;">Thank you for choosing Kilari's Hospitals - Your Health is Our Priority!</span></marquee>
     </footer>
 
     <!-- BACK TO TOP -->
@@ -1085,15 +1141,11 @@
 
             <!-- LOGIN FORM -->
             <div class="lm-body" id="lm-login-form">
-                <div class="lm-hint">
-                    <strong>Demo Credentials</strong>
-                    Email: <b>patient&#64;gmail.com</b> &nbsp;·&nbsp; Password: <b>Patient&#64;123</b>
-                </div>
                 <div class="lm-group">
                     <label class="lm-label">Email Address</label>
                     <div class="lm-input-wrap">
                         <span class="lm-icon">📧</span>
-                        <input type="email" class="lm-input" id="login-email" placeholder="patient@gmaail.com"
+                        <input type="email" class="lm-input" id="login-email" placeholder="Enter your email address"
                             autocomplete="email" />
                     </div>
                     <div class="lm-error" id="login-email-err">Please enter a valid email address</div>
@@ -1236,6 +1288,7 @@
             </div>
         </div>
         <div id="platform-content"></div>
+        
     </div>
 
     <script src="script.js"></script>
