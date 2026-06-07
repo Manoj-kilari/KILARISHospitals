@@ -37,6 +37,13 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <!-- Configure backend API endpoint for patient sign-in/registration -->
+    <script>
+        // Set your backend base URL here. Examples:
+        // - Local development: window.PATIENT_API_BASE = 'http://localhost:3000/api';
+        // - Production: window.PATIENT_API_BASE = 'https://api.kilarishospitals.com/api';
+        window.PATIENT_API_BASE = 'http://localhost:3000/api'; // CHANGE THIS TO YOUR BACKEND URL
+    </script>
     <script src="patient-api.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -69,7 +76,7 @@
             <a href="#locations">Find a Hospital</a>
             <a href="#blood" onclick="requireLogin()">Book Lab Test</a>
             <a href="#" onclick="requireLogin()">Health Records</a>
-            <a href="#" onclick="showReportsComingSoon()">Reports</a>
+            <a href="#" onclick="requireLogin(); if(currentUser) openReports();">Reports</a>
             <a href="#" onclick="requireLogin()">Appointments</a>
             <a href="#">Insurance</a>
         </div>
@@ -1382,14 +1389,18 @@
                             <label class="appointment-label">Time *</label>
                             <select class="appointment-input" id="appt-time" required>
                                 <option value="">Select time</option>
-                                <option>09:00 AM</option>
                                 <option>10:00 AM</option>
+                                <option>10:30 AM</option>
                                 <option>11:00 AM</option>
+                                <option>11:30 AM</option>
                                 <option>12:00 PM</option>
-                                <option>02:00 PM</option>
-                                <option>03:00 PM</option>
-                                <option>04:00 PM</option>
-                                <option>05:00 PM</option>
+                                <option>2:00 PM</option>
+                                <option>2:30 PM</option>
+                                <option>3:00 PM</option>
+                                <option>3:30 PM</option>
+                                <option>4:00 PM</option>
+                                <option>4:30 PM</option>
+                                <option>5:00 PM</option>
                             </select>
                         </div>
                     </div>
@@ -1447,6 +1458,179 @@
                 <div class="calendar-appointments-list">
                     <h4>Upcoming Appointments</h4>
                     <div id="upcoming-appointments"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REPORTS MODAL -->
+    <div id="reports-overlay" class="modal" style="display:none;">
+        <div class="modal-content reports-modal" style="max-width:800px;max-height:85vh;overflow-y:auto;">
+            <div class="modal-header">
+                <h3>📋 Medical Reports</h3>
+                <button class="modal-close" onclick="closeReports()">✕</button>
+            </div>
+            <div class="modal-body" style="padding:1.5rem;">
+                <!-- Reports tabs -->
+                <div class="reports-tabs" style="display:flex;gap:1rem;margin-bottom:1.5rem;border-bottom:1px solid #e0e0e0;padding-bottom:1rem;">
+                    <button class="reports-tab active" onclick="switchReportsTab('lab')" style="padding:0.5rem 1rem;background:none;border:none;color:var(--blue);font-weight:600;cursor:pointer;border-bottom:2px solid var(--blue);margin-bottom:-1rem;">🩸 Lab Tests</button>
+                    <button class="reports-tab" onclick="switchReportsTab('consultation')" style="padding:0.5rem 1rem;background:none;border:none;color:#999;font-weight:500;cursor:pointer;margin-bottom:-1rem;">👨‍⚕️ Consultations</button>
+                    <button class="reports-tab" onclick="switchReportsTab('prescriptions')" style="padding:0.5rem 1rem;background:none;border:none;color:#999;font-weight:500;cursor:pointer;margin-bottom:-1rem;">💊 Prescriptions</button>
+                </div>
+
+                <!-- Lab Reports Tab -->
+                <div id="reports-lab-tab" class="reports-tab-content">
+                    <div id="lab-reports-list" style="display:flex;flex-direction:column;gap:1rem;"></div>
+                </div>
+
+                <!-- Consultation Reports Tab -->
+                <div id="reports-consultation-tab" class="reports-tab-content" style="display:none;">
+                    <div id="consultation-reports-list" style="display:flex;flex-direction:column;gap:1rem;"></div>
+                </div>
+
+                <!-- Prescriptions Tab -->
+                <div id="reports-prescriptions-tab" class="reports-tab-content" style="display:none;">
+                    <div id="prescriptions-list" style="display:flex;flex-direction:column;gap:1rem;"></div>
+                </div>
+
+                <!-- Empty state -->
+                <div id="reports-empty" style="text-align:center;padding:2rem;color:var(--subtext);">
+                    <div style="font-size:3rem;margin-bottom:1rem;">📭</div>
+                    <div>No reports available yet.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TIME SLOTS MODAL -->
+    <div id="time-slots-overlay" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width:600px;">
+            <div class="modal-header">
+                <h3 id="time-slots-title">📅 Available Time Slots</h3>
+                <button class="modal-close" onclick="closeTimeSlots()">✕</button>
+            </div>
+            <div class="modal-body" style="padding:1.5rem;">
+                <div id="time-slots-date" style="margin-bottom:1.5rem;padding:1rem;background:#f0f7ff;border-radius:8px;border-left:4px solid var(--blue);font-weight:600;color:var(--text);">
+                    Selected Date: <span id="selected-date-display">--</span>
+                </div>
+                <div style="margin-bottom:1rem;font-weight:600;color:var(--text);">Select a time slot:</div>
+                <div id="time-slots-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:0.75rem;margin-bottom:1.5rem;"></div>
+                <div style="display:flex;gap:1rem;justify-content:flex-end;">
+                    <button class="btn-secondary" onclick="closeTimeSlots()" style="padding:0.75rem 1.5rem;border:1px solid #ddd;background:#f5f5f5;border-radius:6px;cursor:pointer;font-weight:600;">Cancel</button>
+                    <button class="btn-primary" id="confirm-time-slot-btn" onclick="confirmTimeSlot()" style="padding:0.75rem 1.5rem;background:var(--blue);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;display:none;">Confirm & Book</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILE SETTINGS MODAL -->
+    <div id="profile-settings-overlay" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width:600px;">
+            <div class="modal-header">
+                <h3>⚙️ Profile Settings</h3>
+                <button class="modal-close" onclick="closeProfileSettings()">✕</button>
+            </div>
+            <div class="modal-body" style="padding:1.5rem;">
+                <div style="display:flex;flex-direction:column;gap:1.5rem;">
+                    <!-- Personal Information Section -->
+                    <div>
+                        <h4 style="margin:0 0 1rem 0;color:var(--text);font-weight:600;">Personal Information</h4>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+                            <div>
+                                <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">First Name</label>
+                                <input type="text" id="profile-firstName" placeholder="First name" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                            </div>
+                            <div>
+                                <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">Last Name</label>
+                                <input type="text" id="profile-lastName" placeholder="Last name" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                            </div>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">Email Address</label>
+                            <input type="email" id="profile-email" placeholder="email@example.com" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                        </div>
+                        <div>
+                            <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">Phone Number</label>
+                            <input type="tel" id="profile-phone" placeholder="+91 9876543210" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                        </div>
+                    </div>
+
+                    <!-- Health Information Section -->
+                    <div style="border-top:1px solid #e0e0e0;padding-top:1rem;">
+                        <h4 style="margin:0 0 1rem 0;color:var(--text);font-weight:600;">Health Information</h4>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+                            <div>
+                                <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">Date of Birth</label>
+                                <input type="date" id="profile-dob" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                            </div>
+                            <div>
+                                <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">Blood Type</label>
+                                <select id="profile-bloodType" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                                    <option value="">Select Blood Type</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">Allergies</label>
+                            <textarea id="profile-allergies" placeholder="List any allergies (e.g., Penicillin, Nuts)" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;min-height:80px;"></textarea>
+                        </div>
+                        <div>
+                            <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">Medical Conditions</label>
+                            <textarea id="profile-conditions" placeholder="List chronic conditions (e.g., Diabetes, Hypertension)" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;min-height:80px;"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Contact Section -->
+                    <div style="border-top:1px solid #e0e0e0;padding-top:1rem;">
+                        <h4 style="margin:0 0 1rem 0;color:var(--text);font-weight:600;">Emergency Contact</h4>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+                            <div>
+                                <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">Contact Name</label>
+                                <input type="text" id="profile-emergencyName" placeholder="Name" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                            </div>
+                            <div>
+                                <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">Relationship</label>
+                                <input type="text" id="profile-emergencyRelation" placeholder="Relation" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display:block;font-size:0.85rem;color:var(--subtext);margin-bottom:0.5rem;font-weight:600;">Emergency Phone Number</label>
+                            <input type="tel" id="profile-emergencyPhone" placeholder="+91 9876543210" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                        </div>
+                    </div>
+
+                    <!-- Notification Preferences -->
+                    <div style="border-top:1px solid #e0e0e0;padding-top:1rem;">
+                        <h4 style="margin:0 0 1rem 0;color:var(--text);font-weight:600;">Notification Preferences</h4>
+                        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                            <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;">
+                                <input type="checkbox" id="notifications-email" checked style="width:18px;height:18px;cursor:pointer;">
+                                <span style="font-size:0.9rem;color:var(--text);">📧 Email Notifications</span>
+                            </label>
+                            <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;">
+                                <input type="checkbox" id="notifications-sms" checked style="width:18px;height:18px;cursor:pointer;">
+                                <span style="font-size:0.9rem;color:var(--text);">📱 SMS Notifications</span>
+                            </label>
+                            <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;">
+                                <input type="checkbox" id="notifications-appointment" checked style="width:18px;height:18px;cursor:pointer;">
+                                <span style="font-size:0.9rem;color:var(--text);">📅 Appointment Reminders</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1.5rem;border-top:1px solid #e0e0e0;padding-top:1.5rem;">
+                    <button class="btn-secondary" onclick="closeProfileSettings()" style="padding:0.75rem 1.5rem;border:1px solid #ddd;background:#f5f5f5;border-radius:6px;cursor:pointer;font-weight:600;color:var(--text);">Cancel</button>
+                    <button class="btn-primary" onclick="saveProfileSettings()" style="padding:0.75rem 1.5rem;background:var(--blue);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">💾 Save Changes</button>
                 </div>
             </div>
         </div>
