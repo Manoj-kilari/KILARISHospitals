@@ -66,6 +66,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
   });
 
+  // Appointment booking modal – backdrop click
+  const apptOverlay = document.getElementById('appt-overlay');
+  if (apptOverlay) apptOverlay.addEventListener('click', function (e) {
+    if (e.target === this) closeAppointmentBooking();
+  });
+
+  // Calendar modal – backdrop click
+  const calendarOverlay = document.getElementById('calendar-overlay');
+  if (calendarOverlay) calendarOverlay.addEventListener('click', function (e) {
+    if (e.target === this) closeCalendar();
+  });
+
+  // Appointment booking form submit
+  const apptForm = document.getElementById('appt-form');
+  if (apptForm) apptForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitAppointmentBooking();
+  });
+
+  // Plans compare modal – backdrop click
+  const plansCompareModal = document.getElementById('plans-compare-modal');
+  if (plansCompareModal) plansCompareModal.addEventListener('click', function (e) {
+    if (e.target === this) closePlansCompare();
+  });
+
 
 
   // Keyboard: Escape closes modals, Enter submits login form
@@ -176,7 +201,7 @@ function renderNavAuth() {
 
     actions.innerHTML = `
 
-      <button class="btn-book" onclick="requireLogin()">📅 Book Appointment</button>
+      <button class="btn-book" onclick="requireLogin()">👤 Patient Portal</button>
 
       <div class="nav-user" id="nav-user-wrap">
 
@@ -196,11 +221,11 @@ function renderNavAuth() {
 
           <button class="nud-item" onclick="openPlatform('patient');closeDropdown()">🏠 My Dashboard</button>
 
-          <button class="nud-item" onclick="openAppointmentModal();closeDropdown()">📅 Book Appointment</button>
+          <button class="nud-item" onclick="openPlatform('patient');closeDropdown()">👤 Patient Portal</button>
 
           <button class="nud-item" onclick="alert('Reports feature coming soon!');closeDropdown()">📊 My Reports</button>
 
-          <button class="nud-item" onclick="alert('Appointments feature coming soon!');closeDropdown()">📋 My Appointments</button>
+          <button class="nud-item" onclick="openCalendar();closeDropdown()">� My Appointments</button>
 
           <div class="nud-divider"></div>
 
@@ -214,7 +239,7 @@ function renderNavAuth() {
 
     if (mobileActions) mobileActions.innerHTML = `
 
-      <button class="btn-book" onclick="closeNav();openPlatform('patient')">📅 Book Appointment</button>
+      <button class="btn-book" onclick="closeNav();openPlatform('patient')">👤 Patient Portal</button>
 
       <button class="btn-login" style="background:rgba(230,57,70,.1);color:var(--red);border-color:var(--red);" onclick="closeNav();doLogout()">🚪 Sign Out (${currentUser.firstName})</button>`;
 
@@ -226,7 +251,7 @@ function renderNavAuth() {
 
       <button class="btn-login" id="nav-login-btn" onclick="openLoginModal('login')">Patient Login</button>
 
-      <button class="btn-book" id="nav-book-btn" onclick="requireLogin()">Book Appointment</button>`;
+      <button class="btn-book" id="nav-book-btn" onclick="requireLogin()">Patient Portal</button>`;
 
     // Mobile
 
@@ -234,7 +259,7 @@ function renderNavAuth() {
 
       <button class="btn-login" onclick="closeNav();openLoginModal('login')">Patient Login</button>
 
-      <button class="btn-book" onclick="closeNav();requireLogin()">Book Appointment</button>`;
+      <button class="btn-book" onclick="closeNav();requireLogin()">Patient Portal</button>`;
 
   }
 
@@ -595,6 +620,11 @@ function showSuccessState(title, user) {
   renderNavAuth();
   setTimeout(() => {
     closeLoginModal();
+    if (typeof window.__postLoginAction === 'function') {
+      const fn = window.__postLoginAction;
+      window.__postLoginAction = null;
+      try { fn(); } catch (e) { }
+    }
   }, 1600);
 }
 
@@ -612,14 +642,10 @@ function doLogout() {
 
 function requireLogin() {
 
-  if (currentUser) { 
-
-    openAppointmentModal(); 
-
-  } else { 
-
-    openLoginModal('login'); 
-
+  if (currentUser) {
+    openCalendar();
+  } else {
+    openLoginModal('login');
   }
 
 }
@@ -650,6 +676,383 @@ function showToast(msg) {
 
   setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 3000);
 
+}
+
+function showReportsComingSoon() {
+  alert('Reports feature coming soon!');
+}
+
+function showAppointmentsComingSoon() {
+  alert('Appointments feature coming soon!');
+}
+
+function openAppointmentBooking() {
+  const open = () => {
+    const overlay = document.getElementById('appt-overlay');
+    const form = document.getElementById('appt-form');
+    const success = document.getElementById('appt-success');
+    if (!overlay || !form || !success) return;
+
+    success.style.display = 'none';
+    form.style.display = 'block';
+
+    // prefill if user known
+    try {
+      const u = currentUser || JSON.parse(localStorage.getItem('mh_user') || 'null');
+      if (u && u.name) document.getElementById('appt-name').value = u.name;
+      if (u && u.phone) document.getElementById('appt-phone').value = u.phone;
+    } catch (e) { }
+
+    overlay.style.display = 'flex';
+  };
+
+  if (currentUser) open();
+  else {
+    window.__postLoginAction = open;
+    openLoginModal('login');
+  }
+}
+
+function closeAppointmentBooking() {
+  const overlay = document.getElementById('appt-overlay');
+  if (!overlay) return;
+  overlay.style.display = 'none';
+}
+
+function submitAppointmentBooking() {
+  const name = document.getElementById('appt-name')?.value.trim();
+  const phone = document.getElementById('appt-phone')?.value.trim();
+  const date = document.getElementById('appt-date')?.value;
+  const time = document.getElementById('appt-time')?.value;
+  const dept = document.getElementById('appt-dept')?.value;
+  const reason = document.getElementById('appt-reason')?.value.trim() || '';
+
+  if (!name || !phone || !date || !time || !dept) {
+    alert('Please fill all required fields.');
+    return;
+  }
+
+  const booking = {
+    id: 'APPT-' + Date.now(),
+    name,
+    phone,
+    date,
+    time,
+    department: dept,
+    reason,
+    createdAt: new Date().toISOString(),
+    reminderSent: false
+  };
+
+  try {
+    const existing = JSON.parse(localStorage.getItem('mh_appointments') || '[]');
+    existing.unshift(booking);
+    localStorage.setItem('mh_appointments', JSON.stringify(existing));
+  } catch (e) { }
+
+  const form = document.getElementById('appt-form');
+  const success = document.getElementById('appt-success');
+  if (form) form.style.display = 'none';
+  if (success) {
+    success.innerHTML = `
+      <div style="font-weight:800;color:var(--text);font-size:1.15rem;margin-bottom:.35rem;">Appointment booked!</div>
+      <div style="color:var(--subtext);line-height:1.6;">We saved your booking. Our team will contact you shortly.</div>
+      <div style="margin-top:1rem;display:flex;gap:.75rem;justify-content:flex-end;">
+        <button class="btn-secondary" onclick="closeAppointmentBooking()">Close</button>
+        <button class="btn-primary" onclick="closeAppointmentBooking();openCalendar()">📅 View Calendar</button>
+      </div>
+    `;
+    success.style.display = 'block';
+  }
+  try { showToast('✅ Appointment booked'); } catch (e) { }
+  
+  // Set reminder for the appointment
+  setReminder(booking);
+}
+
+/* ═══════════════════════════════════════════════════
+   CALENDAR & REMINDER SYSTEM
+   ═══════════════════════════════════════════════════ */
+
+let currentCalendarDate = new Date();
+
+function openCalendar() {
+  const overlay = document.getElementById('calendar-overlay');
+  if (!overlay) return;
+  overlay.style.display = 'flex';
+  renderCalendar();
+  renderUpcomingAppointments();
+}
+
+function closeCalendar() {
+  const overlay = document.getElementById('calendar-overlay');
+  if (!overlay) return;
+  overlay.style.display = 'none';
+}
+
+function changeMonth(delta) {
+  currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendar-grid');
+  const monthYear = document.getElementById('calendar-month-year');
+  if (!grid || !monthYear) return;
+
+  const year = currentCalendarDate.getFullYear();
+  const month = currentCalendarDate.getMonth();
+  
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+  monthYear.textContent = `${monthNames[month]} ${year}`;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date();
+
+  const appointments = getAppointments();
+  const appointmentsByDate = {};
+  appointments.forEach(appt => {
+    const apptDate = new Date(appt.date);
+    if (apptDate.getFullYear() === year && apptDate.getMonth() === month) {
+      const day = apptDate.getDate();
+      if (!appointmentsByDate[day]) {
+        appointmentsByDate[day] = [];
+      }
+      appointmentsByDate[day].push(appt);
+    }
+  });
+
+  let html = '';
+  
+  // Empty cells for days before the first day of the month
+  for (let i = 0; i < firstDay; i++) {
+    html += '<div class="calendar-day empty"></div>';
+  }
+
+  // Days of the month
+  for (let day = 1; day <= daysInMonth; day++) {
+    const isToday = today.getDate() === day && 
+                    today.getMonth() === month && 
+                    today.getFullYear() === year;
+    const dayAppointments = appointmentsByDate[day] || [];
+    const hasAppointment = dayAppointments.length > 0;
+    
+    let timeDisplay = '';
+    if (hasAppointment) {
+      const times = dayAppointments.map(a => a.time).sort();
+      timeDisplay = `<div class="calendar-appointment-times">${times.slice(0, 2).join(', ')}${times.length > 2 ? ' +' : ''}</div>`;
+    }
+    
+    html += `<div class="calendar-day ${isToday ? 'today' : ''} ${hasAppointment ? 'has-appointment' : ''}" 
+                 onclick="showDayAppointments(${day})">
+              <span class="calendar-day-number">${day}</span>
+              ${timeDisplay}
+            </div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function showDayAppointments(day) {
+  const year = currentCalendarDate.getFullYear();
+  const month = currentCalendarDate.getMonth();
+  const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  
+  const appointments = getAppointments().filter(appt => appt.date === dateStr);
+  
+  if (appointments.length > 0) {
+    let msg = `Appointments on ${dateStr}:\n\n`;
+    appointments.forEach(appt => {
+      msg += `• ${appt.time} - ${appt.department}\n  ${appt.reason || 'No reason specified'}\n\n`;
+    });
+    alert(msg);
+  }
+}
+
+function renderUpcomingAppointments() {
+  const container = document.getElementById('upcoming-appointments');
+  if (!container) return;
+
+  const appointments = getAppointments();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const upcoming = appointments.filter(appt => {
+    const apptDate = new Date(appt.date);
+    return apptDate >= today;
+  }).sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time));
+
+  if (upcoming.length === 0) {
+    container.innerHTML = '<div class="no-appointments-msg">No upcoming appointments. Book your first appointment!</div>';
+    return;
+  }
+
+  let html = '';
+  upcoming.forEach(appt => {
+    const apptDate = new Date(appt.date);
+    const isUrgent = (apptDate - today) / (1000 * 60 * 60 * 24) <= 2; // Within 2 days
+    
+    html += `<div class="appointment-item ${isUrgent ? 'urgent' : ''}">
+              <div class="appointment-date">${formatDate(appt.date)}</div>
+              <div class="appointment-time">⏰ ${appt.time}</div>
+              <div class="appointment-dept">🏥 ${appt.department}</div>
+              ${appt.reason ? `<div class="appointment-reason">${appt.reason}</div>` : ''}
+              <div class="appointment-actions">
+                <button class="btn-reschedule" onclick="rescheduleAppointment('${appt.id}')">📅 Reschedule</button>
+                <button class="btn-cancel" onclick="cancelAppointment('${appt.id}')">✕ Cancel</button>
+              </div>
+            </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function getAppointments() {
+  try {
+    return JSON.parse(localStorage.getItem('mh_appointments') || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+}
+
+function cancelAppointment(id) {
+  if (!confirm('Are you sure you want to cancel this appointment?')) return;
+  
+  const appointments = getAppointments();
+  const filtered = appointments.filter(appt => appt.id !== id);
+  localStorage.setItem('mh_appointments', JSON.stringify(filtered));
+  
+  renderCalendar();
+  renderUpcomingAppointments();
+  showToast('🗑️ Appointment cancelled');
+}
+
+function rescheduleAppointment(id) {
+  const appointments = getAppointments();
+  const appt = appointments.find(a => a.id === id);
+  if (!appt) return;
+  
+  const newDate = prompt('Enter new date (YYYY-MM-DD):', appt.date);
+  if (!newDate) return;
+  
+  const newTime = prompt('Enter new time:', appt.time);
+  if (!newTime) return;
+  
+  appt.date = newDate;
+  appt.time = newTime;
+  appt.reminderSent = false;
+  
+  localStorage.setItem('mh_appointments', JSON.stringify(appointments));
+  
+  renderCalendar();
+  renderUpcomingAppointments();
+  setReminder(appt);
+  showToast('📅 Appointment rescheduled');
+}
+
+/* REMINDER SYSTEM */
+
+function setReminder(appointment) {
+  const apptDateTime = new Date(appointment.date + ' ' + convertTo24Hour(appointment.time));
+  const now = new Date();
+  const timeUntilAppointment = apptDateTime - now;
+  
+  // Set reminder for 1 hour before appointment
+  const reminderTime = timeUntilAppointment - (60 * 60 * 1000);
+  
+  if (reminderTime > 0) {
+    setTimeout(() => {
+      showReminderNotification(appointment);
+    }, reminderTime);
+  }
+}
+
+function convertTo24Hour(timeStr) {
+  const [time, period] = timeStr.split(' ');
+  let [hours, minutes] = time.split(':').map(Number);
+  
+  if (period === 'PM' && hours !== 12) {
+    hours += 12;
+  } else if (period === 'AM' && hours === 12) {
+    hours = 0;
+  }
+  
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
+function showReminderNotification(appointment) {
+  // Check if reminder already sent
+  const appointments = getAppointments();
+  const updatedAppt = appointments.find(a => a.id === appointment.id);
+  if (updatedAppt && updatedAppt.reminderSent) return;
+  
+  // Mark reminder as sent
+  if (updatedAppt) {
+    updatedAppt.reminderSent = true;
+    localStorage.setItem('mh_appointments', JSON.stringify(appointments));
+  }
+  
+  const notification = document.createElement('div');
+  notification.className = 'reminder-notification';
+  notification.innerHTML = `
+    <button class="reminder-close" onclick="this.parentElement.remove()">✕</button>
+    <h4>🔔 Appointment Reminder</h4>
+    <p>Your ${appointment.department} appointment is in 1 hour at ${appointment.time}</p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;">${formatDate(appointment.date)}</p>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Auto-remove after 10 seconds
+  setTimeout(() => {
+    notification.remove();
+  }, 10000);
+  
+  // Play notification sound if available
+  try {
+    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleQkFZrW2h4h1FA2etbGHi3UVDa61sYeLdRQ');
+    audio.volume = 0.3;
+    audio.play().catch(() => {});
+  } catch (e) {}
+}
+
+// Check for reminders every minute
+setInterval(() => {
+  const appointments = getAppointments();
+  const now = new Date();
+  
+  appointments.forEach(appt => {
+    if (appt.reminderSent) return;
+    
+    const apptDateTime = new Date(appt.date + ' ' + convertTo24Hour(appt.time));
+    const timeUntilAppointment = apptDateTime - now;
+    
+    // If appointment is within 1 hour and reminder not sent
+    if (timeUntilAppointment > 0 && timeUntilAppointment <= (60 * 60 * 1000)) {
+      showReminderNotification(appt);
+    }
+  });
+}, 60000); // Check every minute
+
+/* ─── HEALTH PLANS compare modal ─── */
+function openPlansCompare() {
+  const modal = document.getElementById('plans-compare-modal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+}
+
+function closePlansCompare() {
+  const modal = document.getElementById('plans-compare-modal');
+  if (!modal) return;
+  modal.style.display = 'none';
 }
 
 

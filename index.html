@@ -69,6 +69,8 @@
             <a href="#locations">Find a Hospital</a>
             <a href="#blood" onclick="requireLogin()">Book Lab Test</a>
             <a href="#" onclick="requireLogin()">Health Records</a>
+            <a href="#" onclick="showReportsComingSoon()">Reports</a>
+            <a href="#" onclick="requireLogin()">Appointments</a>
             <a href="#">Insurance</a>
         </div>
         <div class="topbar-right">
@@ -97,7 +99,7 @@
         </div>
         <div class="nav-actions" id="nav-actions">
             <button class="btn-login" id="nav-login-btn">Patient Login</button>
-            <button class="btn-book" id="nav-book-btn">Book Appointment</button>
+            <button class="btn-book" id="nav-book-btn">Patient Portal</button>
         </div>
         <button class="hamburger" id="hamburger" aria-label="Menu">
             <span></span><span></span><span></span>
@@ -116,7 +118,7 @@
        
         <div class="mobile-nav-actions" id="mobile-nav-actions">
             <button class="btn-login" id="mob-login-btn">Patient Login</button>
-            <button class="btn-book" id="mob-book-btn">Book Appointment</button>
+            <button class="btn-book" id="mob-book-btn">Patient Portal</button>
         </div>
     </div>
 
@@ -151,7 +153,7 @@
                     Care</span>
             </div>
             <div class="hero-actions" style="margin-bottom:0">
-                <button class="hero-btn-primary" onclick="requireLogin()">📅 Book Appointment</button>
+                <button class="hero-btn-primary" onclick="requireLogin()">👤 Patient Portal</button>
                 <button class="hero-btn-outline" onclick="requireLogin()">🩸 Book Lab Test at Home</button>
             </div>
             <div class="hero-stats">
@@ -541,7 +543,7 @@
                 <div class="svc-title">Health Plans & Preventive Care</div>
                 <div class="svc-desc">Comprehensive annual health packages from ₹1,499. Full body checkup, dental, eye,
                     cardiac, cancer screenings for individuals and families.</div>
-                <div class="svc-link">View Plans →</div>
+                <a class="svc-link" href="#patient-management">View Plans →</a>
             </div>
         </div>
     </section>
@@ -780,35 +782,97 @@
         </div>
     </div>
 
-    <!-- ── PATIENT MANAGEMENT SECTION ── -->
+    <!-- ── HEALTH PLANS SECTION ── -->
     <section class="patient-management" id="patient-management">
         <div class="sec-header">
             <div>
-                <div class="sec-eyebrow">Patient Records</div>
-                <h2 class="sec-title">Patient <span>Management</span></h2>
-                <p class="sec-sub">View and manage patient information, appointments, and medical history.</p>
-            </div>
-            <div class="patient-actions">
-                <input type="text" id="patient-search" placeholder="Search patients..." class="patient-search-input">
-                <button class="btn-primary" onclick="loadPatients()">🔄 Refresh</button>
-                <button class="btn-primary" onclick="showAddPatientForm()">➕ Add Patient</button>
+                <div class="sec-eyebrow">Preventive Care</div>
+                <h2 class="sec-title">Health <span>Plans</span></h2>
+                <p class="sec-sub">Choose a package that fits your needs — affordable screenings for individuals, couples, and families.</p>
+                <p class="hp-note">Includes doctor consultation + digital reports. <span class="hp-tnc">T&C apply.</span></p>
             </div>
         </div>
 
-        <!-- Patient List -->
-        <div id="patient-list" class="patient-grid">
-            <!-- Patients will be loaded here -->
+        <div class="patient-grid">
+            <div class="patient-card">
+                <div class="patient-name">Basic Checkup</div>
+                <div class="patient-meta">Starting at ₹1,499</div>
+                <div class="patient-detail">CBC, Sugar, Thyroid, Cholesterol</div>
+                <div class="patient-detail">Vitals + Doctor consultation</div>
+                <button class="btn-primary" onclick="requireLogin()">Get Plan</button>
+            </div>
+            <div class="patient-card">
+                <div class="patient-name">Cardiac Care</div>
+                <div class="patient-meta">Starting at ₹2,999</div>
+                <div class="patient-detail">ECG, Echo (as advised), Lipid profile</div>
+                <div class="patient-detail">BP + Heart risk assessment</div>
+                <button class="btn-primary" onclick="requireLogin()">Get Plan</button>
+            </div>
+            <div class="patient-card">
+                <div class="patient-name">Women's Wellness</div>
+                <div class="patient-meta">Starting at ₹3,499</div>
+                <div class="patient-detail">Thyroid, Vitamin D/B12, PAP smear</div>
+                <div class="patient-detail">Gynaec consultation + lifestyle guidance</div>
+                <button class="btn-primary" onclick="requireLogin()">Get Plan</button>
+            </div>
+            <div class="patient-card">
+                <div class="patient-name">Family Total Care</div>
+                <div class="patient-meta">Starting at ₹5,999</div>
+                <div class="patient-detail">2 adults + 1 child package</div>
+                <div class="patient-detail">Full-body screenings + reports</div>
+                <button class="btn-primary" onclick="requireLogin()">Get Plan</button>
+            </div>
         </div>
 
-        <!-- Patient Details Modal -->
-        <div id="patient-modal" class="modal" style="display:none;">
+        <div class="hp-actions">
+            <button class="btn-primary" type="button" onclick="openPlansCompare()">Compare plans</button>
+        </div>
+
+        <div id="plans-compare-modal" class="modal" style="display:none;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 id="modal-title">Patient Details</h3>
-                    <button class="modal-close" onclick="closePatientModal()">✕</button>
+                    <h3>Compare Health Plans</h3>
+                    <button class="modal-close" onclick="closePlansCompare()">✕</button>
                 </div>
-                <div id="modal-body" class="modal-body">
-                    <!-- Patient details will be loaded here -->
+                <div class="modal-body">
+                    <div class="hp-compare-grid">
+                        <div class="hp-compare-head"></div>
+                        <div class="hp-compare-head">Basic</div>
+                        <div class="hp-compare-head">Cardiac</div>
+                        <div class="hp-compare-head">Women’s</div>
+                        <div class="hp-compare-head">Family</div>
+
+                        <div class="hp-compare-rowhead">Consultation</div>
+                        <div class="hp-compare-cell">✔</div>
+                        <div class="hp-compare-cell">✔</div>
+                        <div class="hp-compare-cell">✔</div>
+                        <div class="hp-compare-cell">✔</div>
+
+                        <div class="hp-compare-rowhead">Blood tests</div>
+                        <div class="hp-compare-cell">✔</div>
+                        <div class="hp-compare-cell">✔</div>
+                        <div class="hp-compare-cell">✔</div>
+                        <div class="hp-compare-cell">✔</div>
+
+                        <div class="hp-compare-rowhead">ECG / Heart risk</div>
+                        <div class="hp-compare-cell">—</div>
+                        <div class="hp-compare-cell">✔</div>
+                        <div class="hp-compare-cell">—</div>
+                        <div class="hp-compare-cell">—</div>
+
+                        <div class="hp-compare-rowhead">Women’s screening</div>
+                        <div class="hp-compare-cell">—</div>
+                        <div class="hp-compare-cell">—</div>
+                        <div class="hp-compare-cell">✔</div>
+                        <div class="hp-compare-cell">—</div>
+
+                        <div class="hp-compare-rowhead">Family package</div>
+                        <div class="hp-compare-cell">—</div>
+                        <div class="hp-compare-cell">—</div>
+                        <div class="hp-compare-cell">—</div>
+                        <div class="hp-compare-cell">✔</div>
+                    </div>
+                    <div class="hp-compare-footnote">Exact inclusions may vary by location and doctor advice. <span class="hp-tnc">T&C apply.</span></div>
                 </div>
             </div>
         </div>
@@ -1055,11 +1119,11 @@
                 <div class="footer-col-title">For Patients</div>
                 <ul class="footer-links">
                     <li><a href="#" onclick="requireLogin()">Patient Portal</a></li>
-                    <li><a href="#">Insurance & TPA</a></li>
-                    <li><a href="#">Health Plans</a></li>
-                    <li><a href="#">Visitor Policy</a></li>
-                    <li><a href="#">Health Library</a></li>
-                    <li><a href="#">Medical Records</a></li>
+                    <li><a href="#patient-management" onclick="requireLogin()">Insurance & TPA</a></li>
+                    <li><a href="#patient-management">Health Plans</a></li>
+                    <li><a href="#about">Visitor Policy</a></li>
+                    <li><a href="#departments">Health Library</a></li>
+                    <li><a href="#patient-management" onclick="requireLogin()">Medical Records</a></li>
                 </ul>
             </div>
             <div>
@@ -1291,139 +1355,99 @@
     </div>
 
     <!-- APPOINTMENT BOOKING MODAL -->
-    <div id="appointment-overlay" class="modal-overlay">
-        <div class="appointment-modal">
-            <div class="appointment-header">
-                <div class="appointment-logo-wrap">
-                    <svg width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="al1" x1="0" y1="0" x2="1" y2="1">
-                                <stop offset="0" stop-color="#0057A8" />
-                                <stop offset="1" stop-color="#0099CC" />
-                            </linearGradient>
-                        </defs>
-                        <circle cx="32" cy="32" r="28" fill="url(#al1)" />
-                        <text x="32" y="40" text-anchor="middle" font-family="Georgia,serif" font-size="20" font-weight="bold" fill="white">K</text>
-                    </svg>
-                    <span class="appointment-logo-name">Kilari's Hospitals</span>
-                </div>
-                <button class="appointment-close" onclick="closeAppointmentModal()" aria-label="Close booking form" title="Close">&#x2715;</button>
-                <div class="appointment-title">Book Your Appointment</div>
-                <div class="appointment-sub">Fill in your details to schedule an appointment</div>
+    <div id="appt-overlay" class="modal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Book Appointment</h3>
+                <button class="modal-close" onclick="closeAppointmentBooking()">✕</button>
             </div>
-
-            <div class="appointment-body">
-                <form id="appointment-form">
-                    <div class="appointment-row">
-                        <div class="appointment-group">
+            <div class="modal-body">
+                <form id="appt-form">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div>
                             <label class="appointment-label">Full Name *</label>
-                            <div class="appointment-input-wrap">
-                                <span class="appointment-icon">👤</span>
-                                <input type="text" class="appointment-input" id="patient-name" placeholder="Enter your full name" required />
-                            </div>
-                            <div class="appointment-error" id="name-error">Please enter your name</div>
+                            <input class="appointment-input" id="appt-name" type="text" placeholder="Enter full name" required>
+                        </div>
+                        <div>
+                            <label class="appointment-label">Phone *</label>
+                            <input class="appointment-input" id="appt-phone" type="tel" placeholder="+91 98765 43210" required>
                         </div>
                     </div>
-
-                    <div class="appointment-row">
-                        <div class="appointment-group">
-                            <label class="appointment-label">Phone Number *</label>
-                            <div class="appointment-input-wrap">
-                                <span class="appointment-icon">📱</span>
-                                <input type="tel" class="appointment-input" id="patient-phone" placeholder="+91 98765 43210" required />
-                            </div>
-                            <div class="appointment-error" id="phone-error">Please enter a valid phone number</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;">
+                        <div>
+                            <label class="appointment-label">Date *</label>
+                            <input class="appointment-input" id="appt-date" type="date" required>
+                        </div>
+                        <div>
+                            <label class="appointment-label">Time *</label>
+                            <select class="appointment-input" id="appt-time" required>
+                                <option value="">Select time</option>
+                                <option>09:00 AM</option>
+                                <option>10:00 AM</option>
+                                <option>11:00 AM</option>
+                                <option>12:00 PM</option>
+                                <option>02:00 PM</option>
+                                <option>03:00 PM</option>
+                                <option>04:00 PM</option>
+                                <option>05:00 PM</option>
+                            </select>
                         </div>
                     </div>
-
-                    <div class="appointment-row">
-                        <div class="appointment-group">
-                            <label class="appointment-label">Address *</label>
-                            <div class="appointment-input-wrap">
-                                <span class="appointment-icon">🏠</span>
-                                <textarea class="appointment-input appointment-textarea" id="patient-address" placeholder="Enter your complete address" rows="3" required></textarea>
-                            </div>
-                            <div class="appointment-error" id="address-error">Please enter your address</div>
-                        </div>
+                    <div style="margin-top:1rem;">
+                        <label class="appointment-label">Department *</label>
+                        <select class="appointment-input" id="appt-dept" required>
+                            <option value="">Select department</option>
+                            <option>Cardiology</option>
+                            <option>Neurology</option>
+                            <option>Orthopedics</option>
+                            <option>Oncology</option>
+                            <option>Pediatrics</option>
+                            <option>General Medicine</option>
+                            <option>Dermatology</option>
+                            <option>Gynaecology</option>
+                        </select>
                     </div>
-
-                    <div class="appointment-row">
-                        <div class="appointment-group half">
-                            <label class="appointment-label">Appointment Date *</label>
-                            <div class="appointment-input-wrap">
-                                <span class="appointment-icon">📅</span>
-                                <input type="date" class="appointment-input" id="appointment-date" required />
-                            </div>
-                            <div class="appointment-error" id="date-error">Please select a date</div>
-                        </div>
-                        <div class="appointment-group half">
-                            <label class="appointment-label">Appointment Time *</label>
-                            <div class="appointment-input-wrap">
-                                <span class="appointment-icon">🕐</span>
-                                <select class="appointment-input" id="appointment-time" required>
-                                    <option value="">Select time</option>
-                                    <option value="09:00 AM">09:00 AM</option>
-                                    <option value="09:30 AM">09:30 AM</option>
-                                    <option value="10:00 AM">10:00 AM</option>
-                                    <option value="10:30 AM">10:30 AM</option>
-                                    <option value="11:00 AM">11:00 AM</option>
-                                    <option value="11:30 AM">11:30 AM</option>
-                                    <option value="12:00 PM">12:00 PM</option>
-                                    <option value="02:00 PM">02:00 PM</option>
-                                    <option value="02:30 PM">02:30 PM</option>
-                                    <option value="03:00 PM">03:00 PM</option>
-                                    <option value="03:30 PM">03:30 PM</option>
-                                    <option value="04:00 PM">04:00 PM</option>
-                                    <option value="04:30 PM">04:30 PM</option>
-                                    <option value="05:00 PM">05:00 PM</option>
-                                    <option value="05:30 PM">05:30 PM</option>
-                                </select>
-                            </div>
-                            <div class="appointment-error" id="time-error">Please select a time</div>
-                        </div>
+                    <div style="margin-top:1rem;">
+                        <label class="appointment-label">Reason (optional)</label>
+                        <textarea class="appointment-input appointment-textarea" id="appt-reason" rows="3" placeholder="Briefly describe your symptoms / reason"></textarea>
                     </div>
-
-                    <div class="appointment-row">
-                        <div class="appointment-group">
-                            <label class="appointment-label">Department *</label>
-                            <div class="appointment-input-wrap">
-                                <span class="appointment-icon">🏥</span>
-                                <select class="appointment-input" id="department" required>
-                                    <option value="">Select department</option>
-                                    <option value="Cardiology">Cardiology</option>
-                                    <option value="Neurology">Neurology</option>
-                                    <option value="Orthopedics">Orthopedics</option>
-                                    <option value="Oncology">Oncology</option>
-                                    <option value="Pediatrics">Pediatrics</option>
-                                    <option value="General Medicine">General Medicine</option>
-                                    <option value="Dermatology">Dermatology</option>
-                                    <option value="Gynaecology">Gynaecology</option>
-                                </select>
-                            </div>
-                            <div class="appointment-error" id="department-error">Please select a department</div>
-                        </div>
+                    <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.2rem;">
+                        <button type="button" class="btn-secondary" onclick="closeAppointmentBooking()">Cancel</button>
+                        <button type="submit" class="btn-primary">Confirm</button>
                     </div>
-
-                    <div class="appointment-row">
-                        <div class="appointment-group">
-                            <label class="appointment-label">Reason for Visit (Optional)</label>
-                            <div class="appointment-input-wrap">
-                                <span class="appointment-icon">📝</span>
-                                <textarea class="appointment-input appointment-textarea" id="reason" placeholder="Brief description of your symptoms or reason for visit" rows="2"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="appointment-submit">Book Appointment</button>
-                    <button type="button" class="appointment-cancel" onclick="closeAppointmentModal()">Cancel</button>
                 </form>
+                <div id="appt-success" style="display:none;">
+                    <div style="font-weight:800;color:var(--text);font-size:1.15rem;margin-bottom:.35rem;">Appointment booked!</div>
+                    <div style="color:var(--subtext);line-height:1.6;">We saved your booking. Our team will contact you shortly.</div>
+                    <div style="margin-top:1rem;display:flex;justify-content:flex-end;">
+                        <button class="btn-primary" onclick="closeAppointmentBooking()">Close</button>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <div class="appointment-success" id="appointment-success" style="display:none">
-                <div class="appointment-success-icon">✅</div>
-                <div class="appointment-success-title">Appointment Booked Successfully!</div>
-                <div class="appointment-success-sub">Your appointment has been scheduled and details have been saved to Excel.</div>
-                <button class="appointment-success-close" onclick="closeAppointmentModal()">Close</button>
+    <!-- APPOINTMENT CALENDAR MODAL -->
+    <div id="calendar-overlay" class="modal" style="display:none;">
+        <div class="modal-content calendar-modal">
+            <div class="modal-header">
+                <h3>📅 My Appointments Calendar</h3>
+                <button class="modal-close" onclick="closeCalendar()">✕</button>
+            </div>
+            <div class="modal-body calendar-body">
+                <div class="calendar-controls">
+                    <button class="calendar-nav-btn" onclick="changeMonth(-1)">◀</button>
+                    <h4 id="calendar-month-year"></h4>
+                    <button class="calendar-nav-btn" onclick="changeMonth(1)">▶</button>
+                </div>
+                <div class="calendar-grid-header">
+                    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+                <div class="calendar-appointments-list">
+                    <h4>Upcoming Appointments</h4>
+                    <div id="upcoming-appointments"></div>
+                </div>
             </div>
         </div>
     </div>

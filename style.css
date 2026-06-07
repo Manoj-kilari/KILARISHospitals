@@ -796,6 +796,614 @@ a {
 
 
 
+/* Calendar Modal Styles */
+
+.calendar-modal {
+
+    max-width: 900px;
+
+}
+
+
+
+.calendar-body {
+
+    padding: 2rem;
+
+}
+
+
+
+.calendar-controls {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 1.5rem;
+
+}
+
+
+
+.calendar-controls h4 {
+
+    margin: 0;
+
+    font-size: 1.3rem;
+
+    font-weight: 700;
+
+    color: var(--text);
+
+}
+
+
+
+.calendar-nav-btn {
+
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+
+    color: white;
+
+    border: none;
+
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    box-shadow: 0 4px 12px rgba(0,87,168,0.2);
+
+}
+
+
+
+.calendar-nav-btn:hover {
+
+    transform: scale(1.1);
+
+    box-shadow: 0 6px 16px rgba(0,87,168,0.3);
+
+}
+
+
+
+.calendar-grid-header {
+
+    display: grid;
+
+    grid-template-columns: repeat(7, 1fr);
+
+    gap: 0.5rem;
+
+    margin-bottom: 0.5rem;
+
+}
+
+
+
+.calendar-grid-header div {
+
+    text-align: center;
+
+    font-weight: 700;
+
+    font-size: 0.85rem;
+
+    color: var(--muted);
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+
+}
+
+
+
+.calendar-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(7, 1fr);
+
+    gap: 0.5rem;
+
+    margin-bottom: 2rem;
+
+}
+
+
+
+.calendar-day {
+
+    aspect-ratio: 1;
+
+    border-radius: 8px;
+
+    background: rgba(255,255,255,0.8);
+
+    border: 1px solid var(--light);
+
+    padding: 0.5rem;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+}
+
+
+
+.calendar-day:hover {
+
+    background: rgba(0,87,168,0.05);
+
+    border-color: var(--blue);
+
+    transform: translateY(-2px);
+
+}
+
+
+
+.calendar-day.today {
+
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+
+    color: white;
+
+    border-color: transparent;
+
+}
+
+
+
+.calendar-day.today .calendar-day-number {
+
+    color: white;
+
+}
+
+
+
+.calendar-day-number {
+
+    font-weight: 700;
+
+    font-size: 0.95rem;
+
+    color: var(--text);
+
+    margin-bottom: 0.25rem;
+
+}
+
+
+
+.calendar-appointment-times {
+
+    font-size: 0.7rem;
+
+    color: var(--teal);
+
+    font-weight: 600;
+
+    line-height: 1.2;
+
+    margin-top: auto;
+
+}
+
+
+
+.calendar-day.today .calendar-appointment-times {
+
+    color: rgba(255,255,255,0.9);
+
+}
+
+
+
+.calendar-day.has-appointment {
+
+    background: rgba(0,168,157,0.1);
+
+    border-color: var(--teal);
+
+}
+
+
+
+.calendar-day.has-appointment::after {
+
+    content: '';
+
+    position: absolute;
+
+    bottom: 8px;
+
+    right: 8px;
+
+    width: 8px;
+
+    height: 8px;
+
+    background: var(--teal);
+
+    border-radius: 50%;
+
+    animation: pulse 2s infinite;
+
+}
+
+
+
+.calendar-day.empty {
+
+    background: transparent;
+
+    border: none;
+
+    cursor: default;
+
+}
+
+
+
+.calendar-day.empty:hover {
+
+    transform: none;
+
+    background: transparent;
+
+    border: none;
+
+}
+
+
+
+.calendar-appointments-list {
+
+    border-top: 2px solid var(--light);
+
+    padding-top: 1.5rem;
+
+}
+
+
+
+.calendar-appointments-list h4 {
+
+    margin: 0 0 1rem 0;
+
+    font-size: 1.1rem;
+
+    font-weight: 700;
+
+    color: var(--text);
+
+}
+
+
+
+.appointment-item {
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 1rem 1.25rem;
+
+    margin-bottom: 0.75rem;
+
+    border-left: 4px solid var(--teal);
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+    transition: all 0.3s ease;
+
+}
+
+
+
+.appointment-item:hover {
+
+    transform: translateX(4px);
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+}
+
+
+
+.appointment-item.urgent {
+
+    border-left-color: var(--red);
+
+}
+
+
+
+.appointment-date {
+
+    font-weight: 700;
+
+    color: var(--blue);
+
+    font-size: 0.9rem;
+
+    margin-bottom: 0.25rem;
+
+}
+
+
+
+.appointment-time {
+
+    font-weight: 600;
+
+    color: var(--teal);
+
+    font-size: 0.85rem;
+
+    margin-bottom: 0.5rem;
+
+}
+
+
+
+.appointment-dept {
+
+    font-weight: 600;
+
+    color: var(--text);
+
+    font-size: 0.95rem;
+
+    margin-bottom: 0.25rem;
+
+}
+
+
+
+.appointment-reason {
+
+    color: var(--subtext);
+
+    font-size: 0.85rem;
+
+    line-height: 1.5;
+
+}
+
+
+
+.appointment-actions {
+
+    display: flex;
+
+    gap: 0.5rem;
+
+    margin-top: 0.75rem;
+
+}
+
+
+
+.appointment-actions button {
+
+    padding: 0.4rem 0.8rem;
+
+    border-radius: 6px;
+
+    font-size: 0.75rem;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    border: none;
+
+}
+
+
+
+.appointment-actions .btn-reschedule {
+
+    background: rgba(0,87,168,0.1);
+
+    color: var(--blue);
+
+}
+
+
+
+.appointment-actions .btn-reschedule:hover {
+
+    background: var(--blue);
+
+    color: white;
+
+}
+
+
+
+.appointment-actions .btn-cancel {
+
+    background: rgba(230,57,70,0.1);
+
+    color: var(--red);
+
+}
+
+
+
+.appointment-actions .btn-cancel:hover {
+
+    background: var(--red);
+
+    color: white;
+
+}
+
+
+
+.no-appointments-msg {
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-style: italic;
+
+    padding: 2rem;
+
+    background: rgba(255,255,255,0.5);
+
+    border-radius: 12px;
+
+    border: 2px dashed var(--light);
+
+}
+
+
+
+/* Reminder notification */
+
+.reminder-notification {
+
+    position: fixed;
+
+    top: 80px;
+
+    right: 20px;
+
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+
+    color: white;
+
+    padding: 1rem 1.5rem;
+
+    border-radius: 12px;
+
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+
+    z-index: 10000;
+
+    animation: slideInRight 0.5s ease;
+
+    max-width: 350px;
+
+}
+
+
+
+@keyframes slideInRight {
+
+    from {
+
+        transform: translateX(400px);
+
+        opacity: 0;
+
+    }
+
+    to {
+
+        transform: translateX(0);
+
+        opacity: 1;
+
+    }
+
+}
+
+
+
+.reminder-notification h4 {
+
+    margin: 0 0 0.5rem 0;
+
+    font-size: 1rem;
+
+    font-weight: 700;
+
+}
+
+
+
+.reminder-notification p {
+
+    margin: 0;
+
+    font-size: 0.85rem;
+
+    line-height: 1.5;
+
+    opacity: 0.95;
+
+}
+
+
+
+.reminder-close {
+
+    position: absolute;
+
+    top: 8px;
+
+    right: 8px;
+
+    background: rgba(255,255,255,0.2);
+
+    border: none;
+
+    color: white;
+
+    width: 24px;
+
+    height: 24px;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    font-size: 0.8rem;
+
+    transition: all 0.3s ease;
+
+}
+
+
+
+.reminder-close:hover {
+
+    background: rgba(255,255,255,0.4);
+
+}
+
+
+
 .patient-management {
 
     padding: 4rem 5%;
@@ -1101,6 +1709,128 @@ a {
     background-clip: text;
 
 }
+
+
+.patient-meta {
+
+    font-size: 0.95rem;
+
+    color: var(--subtext);
+
+    font-weight: 600;
+
+    margin-bottom: 1rem;
+
+    padding: 0.35rem 0.75rem;
+
+    border-radius: 999px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.4rem;
+
+    background: linear-gradient(135deg, rgba(0, 87, 168, 0.08), rgba(0, 168, 157, 0.08));
+
+    border: 1px solid rgba(0, 87, 168, 0.15);
+
+}
+
+
+.patient-detail {
+
+    font-size: 0.95rem;
+
+    color: var(--subtext);
+
+    line-height: 1.6;
+
+    margin-bottom: 0.35rem;
+
+}
+
+
+.patient-card .btn-primary {
+
+    margin-top: 1.25rem;
+
+    width: 100%;
+
+}
+
+
+.hp-note {
+    margin-top: 0.6rem;
+    color: var(--subtext);
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.hp-tnc {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.hp-actions {
+    margin-top: 1.25rem;
+    display: flex;
+    justify-content: center;
+}
+
+.hp-compare-grid {
+    display: grid;
+    grid-template-columns: 1.2fr repeat(4, minmax(70px, 1fr));
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.hp-compare-head {
+    font-weight: 800;
+    color: var(--text);
+    font-size: 0.95rem;
+    padding: 0.35rem 0.25rem;
+}
+
+.hp-compare-rowhead {
+    color: var(--subtext);
+    font-weight: 700;
+    font-size: 0.92rem;
+    padding: 0.35rem 0.25rem;
+}
+
+.hp-compare-cell {
+    text-align: center;
+    background: rgba(0, 87, 168, 0.06);
+    border: 1px solid rgba(0, 87, 168, 0.12);
+    border-radius: 10px;
+    padding: 0.45rem 0.25rem;
+    font-weight: 800;
+    color: var(--blue);
+}
+
+.hp-compare-footnote {
+    margin-top: 1rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+    .patient-card {
+        padding: 1.25rem;
+    }
+
+    .patient-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hp-compare-grid {
+        grid-template-columns: 1.1fr repeat(4, minmax(55px, 1fr));
+        gap: 0.5rem;
+    }
+}
+
 
 
 
@@ -11933,11 +12663,4 @@ nav.scrolled {
     .typing-dots {
 
         background: var(--dark2);
-
-    }
-<<<<<<< HEAD
-
-}
-=======
-}
->>>>>>> 5776abb4fd18e77c08d1a755a4c05c41bda551b9
+    } }
