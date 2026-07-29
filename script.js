@@ -178,11 +178,524 @@ let currentUser = null;
 
 let authTab = 'login';
 
+// Rate limiting for login attempts
+let loginAttempts = {};
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
 
+// Two-factor authentication state
+let twoFactorEnabled = false;
+let twoFactorSecret = null;
+let pendingTwoFactorUser = null;
+let twoFactorBackupCodes = [];
 
-function saveUser(u) { currentUser = u; try { sessionStorage.setItem('mh_user', JSON.stringify(u)); } catch (e) { } }
+// Generate 2FA secret (simulated TOTP)
+function generateTwoFactorSecret() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let secret = '';
+  for (let i = 0; i < 16; i++) {
+    secret += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return secret;
+}
 
-function clearUser() { currentUser = null; try { sessionStorage.removeItem('mh_user'); } catch (e) { } }
+// Generate 6-digit TOTP code (simulated)
+function generateTOTPCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Generate backup codes
+function generateBackupCodes() {
+  const codes = [];
+  for (let i = 0; i < 10; i++) {
+    codes.push(Math.floor(10000000 + Math.random() * 90000000).toString());
+  }
+  return codes;
+}
+
+// Setup 2FA for user
+function setupTwoFactorAuth() {
+  if (!currentUser) {
+    showToast('⚠️ Please sign in first');
+    return;
+  }
+  
+  twoFactorSecret = generateTwoFactorSecret();
+  twoFactorBackupCodes = generateBackupCodes();
+  
+  showTwoFactorSetupModal();
+}
+
+function showTwoFactorSetupModal() {
+  // Create 2FA setup modal
+  let setupModal = document.getElementById('2fa-setup-modal');
+  if (!setupModal) {
+    setupModal = document.createElement('div');
+    setupModal.id = '2fa-setup-modal';
+    setupModal.className = 'modal';
+    setupModal.style.display = 'flex';
+    setupModal.innerHTML = `
+      <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+          <h3>Setup Two-Factor Authentication</h3>
+          <button class="modal-close" onclick="closeTwoFactorSetupModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div id="2fa-step-1">
+            <p style="margin-bottom: 1rem; color: var(--subtext);">Scan the QR code below with your authenticator app (Google Authenticator, Authy, etc.)</p>
+            <div style="background: white; padding: 1rem; border-radius: 8px; text-align: center; margin-bottom: 1rem; border: 2px dashed var(--light);">
+              <div style="font-size: 4rem; margin-bottom: 0.5rem;">📱</div>
+              <div style="font-family: monospace; font-size: 0.9rem; color: var(--subtext); word-break: break-all;">${twoFactorSecret}</div>
+            </div>
+            <p style="margin-bottom: 1rem; color: var(--subtext); font-size: 0.9rem;">Or enter this code manually in your authenticator app</p>
+            <button class="lm-submit" onclick="verifyTwoFactorSetup()" style="width: 100%;">Verify Setup</button>
+          </div>
+          <div id="2fa-step-2" style="display: none;">
+            <p style="margin-bottom: 1rem; color: var(--subtext);">Enter the 6-digit code from your authenticator app to verify setup</p>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Authentication Code</label>
+              <input type="text" id="2fa-verify-code" maxlength="6" placeholder="123456" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light); border-radius: 8px; text-align: center; letter-spacing: 0.5rem; font-size: 1.2rem;">
+            </div>
+            <div id="2fa-setup-error" style="color: var(--red); font-size: 0.85rem; margin-bottom: 0.5rem; display: none;"></div>
+            <button class="lm-submit" onclick="confirmTwoFactorSetup()" style="width: 100%;">Verify & Enable</button>
+          </div>
+          <div id="2fa-step-3" style="display: none;">
+            <div style="text-align: center; padding: 2rem 0;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+              <h4 style="margin-bottom: 0.5rem;">Two-Factor Authentication Enabled</h4>
+              <p style="color: var(--subtext); margin-bottom: 1rem;">Save these backup codes in a safe place. You can use them if you lose access to your authenticator app.</p>
+              <div style="background: var(--gray); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; text-align: left;">
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">Backup Codes:</div>
+                <div style="font-family: monospace; font-size: 0.85rem; line-height: 1.8;">
+                  ${twoFactorBackupCodes.map(code => `<div>${code}</div>`).join('')}
+                </div>
+              </div>
+              <button class="lm-submit" onclick="closeTwoFactorSetupModal(); showToast('✅ 2FA enabled successfully!');" style="width: 100%;">Done</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(setupModal);
+    
+    // Add backdrop click handler
+    setupModal.addEventListener('click', function(e) {
+      if (e.target === setupModal) closeTwoFactorSetupModal();
+    });
+  } else {
+    setupModal.style.display = 'flex';
+    document.getElementById('2fa-step-1').style.display = 'block';
+    document.getElementById('2fa-step-2').style.display = 'none';
+    document.getElementById('2fa-step-3').style.display = 'none';
+    twoFactorSecret = generateTwoFactorSecret();
+    twoFactorBackupCodes = generateBackupCodes();
+    setupModal.querySelector('#2fa-step-1').innerHTML = setupModal.querySelector('#2fa-step-1').innerHTML.replace(/📱.*$/, `📱</div><div style="font-family: monospace; font-size: 0.9rem; color: var(--subtext); word-break: break-all;">${twoFactorSecret}</div>`);
+  }
+}
+
+function closeTwoFactorSetupModal() {
+  const modal = document.getElementById('2fa-setup-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function verifyTwoFactorSetup() {
+  document.getElementById('2fa-step-1').style.display = 'none';
+  document.getElementById('2fa-step-2').style.display = 'block';
+  document.getElementById('2fa-verify-code').focus();
+}
+
+function confirmTwoFactorSetup() {
+  const code = document.getElementById('2fa-verify-code').value.trim();
+  const errorDiv = document.getElementById('2fa-setup-error');
+  
+  if (code.length !== 6) {
+    errorDiv.textContent = 'Please enter the 6-digit code';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  // In production, verify with TOTP algorithm
+  // For demo, accept any 6-digit code
+  errorDiv.style.display = 'none';
+  
+  // Enable 2FA for current user
+  twoFactorEnabled = true;
+  currentUser.twoFactorEnabled = true;
+  currentUser.twoFactorSecret = twoFactorSecret;
+  currentUser.twoFactorBackupCodes = twoFactorBackupCodes;
+  
+  // Update in storage
+  saveUser(currentUser);
+  
+  // Show success with backup codes
+  document.getElementById('2fa-step-2').style.display = 'none';
+  document.getElementById('2fa-step-3').style.display = 'block';
+}
+
+// Verify 2FA during login
+function showTwoFactorVerificationModal(email, user) {
+  pendingTwoFactorUser = user;
+  
+  let verifyModal = document.getElementById('2fa-verify-modal');
+  if (!verifyModal) {
+    verifyModal = document.createElement('div');
+    verifyModal.id = '2fa-verify-modal';
+    verifyModal.className = 'modal';
+    verifyModal.style.display = 'flex';
+    verifyModal.innerHTML = `
+      <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+          <h3>Two-Factor Authentication</h3>
+          <button class="modal-close" onclick="closeTwoFactorVerifyModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <p style="margin-bottom: 1rem; color: var(--subtext);">Enter the 6-digit code from your authenticator app</p>
+          <div style="margin-bottom: 1rem;">
+            <input type="text" id="2fa-login-code" maxlength="6" placeholder="123456" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light); border-radius: 8px; text-align: center; letter-spacing: 0.5rem; font-size: 1.2rem;">
+          </div>
+          <div id="2fa-login-error" style="color: var(--red); font-size: 0.85rem; margin-bottom: 0.5rem; display: none;"></div>
+          <button class="lm-submit" onclick="verifyTwoFactorLogin()" style="width: 100%;">Verify</button>
+          <div style="text-align: center; margin-top: 1rem;">
+            <button style="background: none; border: none; color: var(--blue); cursor: pointer; font-size: 0.85rem;" onclick="showBackupCodeInput()">Use backup code</button>
+          </div>
+          <div id="backup-code-input" style="display: none; margin-top: 1rem;">
+            <input type="text" id="2fa-backup-code" maxlength="8" placeholder="Enter backup code" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light); border-radius: 8px; text-align: center;">
+            <button class="lm-submit" onclick="verifyBackupCode()" style="width: 100%; margin-top: 0.5rem;">Use Backup Code</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(verifyModal);
+    
+    // Add backdrop click handler
+    verifyModal.addEventListener('click', function(e) {
+      if (e.target === verifyModal) closeTwoFactorVerifyModal();
+    });
+  } else {
+    verifyModal.style.display = 'flex';
+    document.getElementById('2fa-login-code').value = '';
+    document.getElementById('2fa-login-error').style.display = 'none';
+    document.getElementById('backup-code-input').style.display = 'none';
+  }
+  
+  document.getElementById('2fa-login-code').focus();
+}
+
+function closeTwoFactorVerifyModal() {
+  const modal = document.getElementById('2fa-verify-modal');
+  if (modal) modal.style.display = 'none';
+  pendingTwoFactorUser = null;
+}
+
+function showBackupCodeInput() {
+  document.getElementById('backup-code-input').style.display = 'block';
+  document.getElementById('2fa-backup-code').focus();
+}
+
+function verifyTwoFactorLogin() {
+  const code = document.getElementById('2fa-login-code').value.trim();
+  const errorDiv = document.getElementById('2fa-login-error');
+  
+  if (code.length !== 6) {
+    errorDiv.textContent = 'Please enter the 6-digit code';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  // In production, verify with TOTP algorithm
+  // For demo, accept any 6-digit code
+  errorDiv.style.display = 'none';
+  
+  if (pendingTwoFactorUser) {
+    showSuccessState(`Welcome back, ${pendingTwoFactorUser.firstName}!`, pendingTwoFactorUser);
+    closeTwoFactorVerifyModal();
+  }
+}
+
+function verifyBackupCode() {
+  const code = document.getElementById('2fa-backup-code').value.trim();
+  const errorDiv = document.getElementById('2fa-login-error');
+  
+  if (code.length !== 8) {
+    errorDiv.textContent = 'Please enter the 8-digit backup code';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  // Check if backup code is valid
+  if (pendingTwoFactorUser && pendingTwoFactorUser.twoFactorBackupCodes && 
+      pendingTwoFactorUser.twoFactorBackupCodes.includes(code)) {
+    // Remove used backup code
+    pendingTwoFactorUser.twoFactorBackupCodes = pendingTwoFactorUser.twoFactorBackupCodes.filter(c => c !== code);
+    saveUser(pendingTwoFactorUser);
+    
+    showSuccessState(`Welcome back, ${pendingTwoFactorUser.firstName}!`, pendingTwoFactorUser);
+    closeTwoFactorVerifyModal();
+    showToast('⚠️ Backup code used. Consider regenerating backup codes.');
+  } else {
+    errorDiv.textContent = 'Invalid backup code';
+    errorDiv.style.display = 'block';
+  }
+}
+
+// Email verification state
+let pendingVerificationEmail = null;
+
+// Password hashing (using Web Crypto API for client-side hashing)
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password + 'kilaris_hospital_salt');
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Strong password validation
+function validatePasswordStrength(password) {
+  const errors = [];
+  
+  if (password.length < 8) {
+    errors.push('Password must be at least 8 characters');
+  }
+  if (!/[A-Z]/.test(password)) {
+    errors.push('Password must contain at least one uppercase letter');
+  }
+  if (!/[a-z]/.test(password)) {
+    errors.push('Password must contain at least one lowercase letter');
+  }
+  if (!/[0-9]/.test(password)) {
+    errors.push('Password must contain at least one number');
+  }
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    errors.push('Password must contain at least one special character');
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors: errors
+  };
+}
+
+// Rate limiting check
+function isRateLimited(email) {
+  const normalizedEmail = email.toLowerCase();
+  const attempts = loginAttempts[normalizedEmail];
+  
+  if (!attempts) return false;
+  
+  if (attempts.count >= MAX_LOGIN_ATTEMPTS) {
+    const timeSinceLastAttempt = Date.now() - attempts.lastAttempt;
+    if (timeSinceLastAttempt < LOCKOUT_DURATION) {
+      return true;
+    } else {
+      // Reset attempts after lockout period
+      delete loginAttempts[normalizedEmail];
+      return false;
+    }
+  }
+  
+  return false;
+}
+
+// Record login attempt
+function recordLoginAttempt(email, success = false) {
+  const normalizedEmail = email.toLowerCase();
+  
+  if (success) {
+    delete loginAttempts[normalizedEmail];
+  } else {
+    if (!loginAttempts[normalizedEmail]) {
+      loginAttempts[normalizedEmail] = { count: 0, lastAttempt: 0 };
+    }
+    loginAttempts[normalizedEmail].count++;
+    loginAttempts[normalizedEmail].lastAttempt = Date.now();
+  }
+}
+
+// Password strength checker for UI
+function checkPasswordStrength(password) {
+  const strengthFill = document.getElementById('strength-fill');
+  const strengthText = document.getElementById('strength-text');
+  const requirements = {
+    length: document.getElementById('req-length'),
+    uppercase: document.getElementById('req-uppercase'),
+    lowercase: document.getElementById('req-lowercase'),
+    number: document.getElementById('req-number'),
+    special: document.getElementById('req-special')
+  };
+  
+  if (!strengthFill || !strengthText) return;
+  
+  const validation = validatePasswordStrength(password);
+  let strength = 0;
+  
+  if (password.length >= 8) strength++;
+  if (/[A-Z]/.test(password)) strength++;
+  if (/[a-z]/.test(password)) strength++;
+  if (/[0-9]/.test(password)) strength++;
+  if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+  
+  // Update strength bar
+  const strengthPercent = (strength / 5) * 100;
+  strengthFill.style.width = strengthPercent + '%';
+  
+  // Update strength text and color
+  if (strength <= 1) {
+    strengthFill.style.background = '#ff4d4d';
+    strengthText.textContent = 'Weak';
+    strengthText.style.color = '#ff4d4d';
+  } else if (strength <= 3) {
+    strengthFill.style.background = '#ffa500';
+    strengthText.textContent = 'Medium';
+    strengthText.style.color = '#ffa500';
+  } else {
+    strengthFill.style.background = '#4CAF50';
+    strengthText.textContent = 'Strong';
+    strengthText.style.color = '#4CAF50';
+  }
+  
+  // Update requirements indicators
+  if (requirements.length) {
+    requirements.length.style.color = password.length >= 8 ? '#4CAF50' : '#999';
+    requirements.length.textContent = (password.length >= 8 ? '✓ ' : '✗ ') + 'At least 8 characters';
+  }
+  if (requirements.uppercase) {
+    requirements.uppercase.style.color = /[A-Z]/.test(password) ? '#4CAF50' : '#999';
+    requirements.uppercase.textContent = (/[A-Z]/.test(password) ? '✓ ' : '✗ ') + 'One uppercase letter';
+  }
+  if (requirements.lowercase) {
+    requirements.lowercase.style.color = /[a-z]/.test(password) ? '#4CAF50' : '#999';
+    requirements.lowercase.textContent = (/[a-z]/.test(password) ? '✓ ' : '✗ ') + 'One lowercase letter';
+  }
+  if (requirements.number) {
+    requirements.number.style.color = /[0-9]/.test(password) ? '#4CAF50' : '#999';
+    requirements.number.textContent = (/[0-9]/.test(password) ? '✓ ' : '✗ ') + 'One number';
+  }
+  if (requirements.special) {
+    requirements.special.style.color = /[!@#$%^&*(),.?":{}|<>]/.test(password) ? '#4CAF50' : '#999';
+    requirements.special.textContent = (/[!@#$%^&*(),.?":{}|<>]/.test(password) ? '✓ ' : '✗ ') + 'One special character';
+  }
+}
+
+// Add password strength UI dynamically
+function addPasswordStrengthUI() {
+  const regPasswordInput = document.getElementById('reg-password');
+  if (regPasswordInput && !document.getElementById('password-strength')) {
+    regPasswordInput.setAttribute('oninput', 'checkPasswordStrength(this.value)');
+    
+    const passwordGroup = regPasswordInput.closest('.lm-group');
+    if (passwordGroup) {
+      const strengthDiv = document.createElement('div');
+      strengthDiv.className = 'password-strength';
+      strengthDiv.id = 'password-strength';
+      strengthDiv.innerHTML = `
+        <div class="strength-bar">
+          <div class="strength-fill" id="strength-fill"></div>
+        </div>
+        <div class="strength-text" id="strength-text">Password strength</div>
+      `;
+      
+      const requirementsDiv = document.createElement('div');
+      requirementsDiv.className = 'password-requirements';
+      requirementsDiv.id = 'password-requirements';
+      requirementsDiv.innerHTML = `
+        <div class="requirement" id="req-length">✗ At least 8 characters</div>
+        <div class="requirement" id="req-uppercase">✗ One uppercase letter</div>
+        <div class="requirement" id="req-lowercase">✗ One lowercase letter</div>
+        <div class="requirement" id="req-number">✗ One number</div>
+        <div class="requirement" id="req-special">✗ One special character</div>
+      `;
+      
+      passwordGroup.appendChild(strengthDiv);
+      passwordGroup.appendChild(requirementsDiv);
+    }
+  }
+}
+
+// Add 2FA setup button to user dropdown
+function addTwoFactorButton() {
+  const userDropdown = document.getElementById('nav-dropdown');
+  if (userDropdown && !document.getElementById('2fa-setup-btn')) {
+    const divider = userDropdown.querySelector('.nud-divider');
+    if (divider) {
+      const twoFactorBtn = document.createElement('button');
+      twoFactorBtn.className = 'nud-item';
+      twoFactorBtn.id = '2fa-setup-btn';
+      twoFactorBtn.innerHTML = '🔐 Two-Factor Auth';
+      twoFactorBtn.onclick = function() {
+        closeDropdown();
+        setupTwoFactorAuth();
+      };
+      
+      userDropdown.insertBefore(twoFactorBtn, divider);
+    }
+  }
+}
+
+// Initialize UI enhancements
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => {
+    addPasswordStrengthUI();
+  }, 1000);
+  
+  // Add CSS styles for password strength UI
+  const style = document.createElement('style');
+  style.textContent = `
+    .password-strength {
+      margin-top: 0.75rem;
+    }
+    .strength-bar {
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      background: #ff4d4d;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+    .strength-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #999;
+    }
+    .password-requirements {
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+    }
+    .requirement {
+      color: #999;
+      margin-bottom: 0.25rem;
+      transition: color 0.3s ease;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Add 2FA button when user logs in
+  const originalRenderNavAuth = renderNavAuth;
+  renderNavAuth = function() {
+    originalRenderNavAuth();
+    if (currentUser) {
+      setTimeout(addTwoFactorButton, 100);
+    }
+  };
+});
+
+function saveUser(u) { 
+  currentUser = u; 
+  const storage = document.getElementById('remember-me')?.checked ? localStorage : sessionStorage;
+  try { storage.setItem('mh_user', JSON.stringify(u)); } catch (e) { } 
+}
+
+function clearUser() { 
+  currentUser = null; 
+  try { sessionStorage.removeItem('mh_user'); } catch (e) { }
+  try { localStorage.removeItem('mh_user'); } catch (e) { }
+  try { localStorage.removeItem('mh_token'); } catch (e) { }
+}
 
 
 
@@ -430,8 +943,182 @@ function showForgot() {
 
   }
 
-  alert(`📧 Password reset link sent to ${email}\n\nCheck your inbox!`);
+  // Show password reset modal
+  showPasswordResetModal(email);
 
+}
+
+// Password reset state
+let passwordResetEmail = null;
+let passwordResetToken = null;
+
+function showPasswordResetModal(email) {
+  passwordResetEmail = email;
+  
+  // Create password reset modal if it doesn't exist
+  let resetModal = document.getElementById('password-reset-modal');
+  if (!resetModal) {
+    resetModal = document.createElement('div');
+    resetModal.id = 'password-reset-modal';
+    resetModal.className = 'modal';
+    resetModal.style.display = 'flex';
+    resetModal.innerHTML = `
+      <div class="modal-content" style="max-width: 450px;">
+        <div class="modal-header">
+          <h3>Reset Password</h3>
+          <button class="modal-close" onclick="closePasswordResetModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div id="reset-step-1">
+            <p style="margin-bottom: 1rem; color: var(--subtext);">We'll send a password reset link to your email.</p>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email</label>
+              <input type="email" id="reset-email" value="${email}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light); border-radius: 8px;" readonly>
+            </div>
+            <button class="lm-submit" onclick="sendPasswordResetEmail()" style="width: 100%;">Send Reset Link</button>
+          </div>
+          <div id="reset-step-2" style="display: none;">
+            <p style="margin-bottom: 1rem; color: var(--subtext);">Enter the 6-digit code sent to your email.</p>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Verification Code</label>
+              <input type="text" id="reset-code" maxlength="6" placeholder="123456" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light); border-radius: 8px; text-align: center; letter-spacing: 0.5rem; font-size: 1.2rem;">
+            </div>
+            <button class="lm-submit" onclick="verifyResetCode()" style="width: 100%;">Verify Code</button>
+          </div>
+          <div id="reset-step-3" style="display: none;">
+            <p style="margin-bottom: 1rem; color: var(--subtext);">Enter your new password.</p>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">New Password</label>
+              <input type="password" id="reset-new-password" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light); border-radius: 8px;">
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Confirm Password</label>
+              <input type="password" id="reset-confirm-password" style="width: 100%; padding: 0.75rem; border: 2px solid var(--light); border-radius: 8px;">
+            </div>
+            <div id="reset-error" style="color: var(--red); font-size: 0.85rem; margin-bottom: 0.5rem; display: none;"></div>
+            <button class="lm-submit" onclick="resetPassword()" style="width: 100%;">Update Password</button>
+          </div>
+          <div id="reset-success" style="display: none; text-align: center; padding: 2rem 0;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+            <h4 style="margin-bottom: 0.5rem;">Password Reset Successful</h4>
+            <p style="color: var(--subtext); margin-bottom: 1rem;">You can now sign in with your new password.</p>
+            <button class="lm-submit" onclick="closePasswordResetModal(); openLoginModal('login');" style="width: 100%;">Sign In</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(resetModal);
+    
+    // Add backdrop click handler
+    resetModal.addEventListener('click', function(e) {
+      if (e.target === resetModal) closePasswordResetModal();
+    });
+  } else {
+    resetModal.style.display = 'flex';
+    // Reset to step 1
+    document.getElementById('reset-step-1').style.display = 'block';
+    document.getElementById('reset-step-2').style.display = 'none';
+    document.getElementById('reset-step-3').style.display = 'none';
+    document.getElementById('reset-success').style.display = 'none';
+    document.getElementById('reset-email').value = email;
+  }
+}
+
+function closePasswordResetModal() {
+  const modal = document.getElementById('password-reset-modal');
+  if (modal) modal.style.display = 'none';
+  passwordResetEmail = null;
+  passwordResetToken = null;
+}
+
+async function sendPasswordResetEmail() {
+  const email = document.getElementById('reset-email').value;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('Please enter a valid email address');
+    return;
+  }
+  
+  // In production, this would call your backend API
+  console.log('[Password Reset] Sending reset email to:', email);
+  
+  // Generate a demo 6-digit code
+  passwordResetToken = Math.floor(100000 + Math.random() * 900000).toString();
+  console.log('[Password Reset] Demo code:', passwordResetToken);
+  
+  showToast(`📧 Reset code sent to ${email} (Demo: ${passwordResetToken})`);
+  
+  // Move to step 2
+  document.getElementById('reset-step-1').style.display = 'none';
+  document.getElementById('reset-step-2').style.display = 'block';
+  document.getElementById('reset-code').focus();
+}
+
+function verifyResetCode() {
+  const code = document.getElementById('reset-code').value.trim();
+  if (code.length !== 6) {
+    alert('Please enter the 6-digit code');
+    return;
+  }
+  
+  // In production, verify with backend
+  if (code === passwordResetToken) {
+    showToast('✅ Code verified!');
+    document.getElementById('reset-step-2').style.display = 'none';
+    document.getElementById('reset-step-3').style.display = 'block';
+    document.getElementById('reset-new-password').focus();
+  } else {
+    alert('Invalid code. Please try again.');
+  }
+}
+
+async function resetPassword() {
+  const newPassword = document.getElementById('reset-new-password').value;
+  const confirmPassword = document.getElementById('reset-confirm-password').value;
+  const errorDiv = document.getElementById('reset-error');
+  
+  // Validate password strength
+  const passwordValidation = validatePasswordStrength(newPassword);
+  if (!passwordValidation.isValid) {
+    errorDiv.textContent = passwordValidation.errors[0];
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  if (newPassword !== confirmPassword) {
+    errorDiv.textContent = 'Passwords do not match';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  errorDiv.style.display = 'none';
+  
+  try {
+    // Hash the new password
+    const hashedPassword = await hashPassword(newPassword);
+    
+    // Update user in local storage (fallback)
+    const all = getRegisteredUsers();
+    const userIndex = all.findIndex(u => u.email.toLowerCase() === passwordResetEmail.toLowerCase());
+    
+    if (userIndex !== -1) {
+      all[userIndex].password = hashedPassword;
+      try { sessionStorage.setItem('mh_reg_users', JSON.stringify(all)); } catch (e) { }
+      
+      // Show success
+      document.getElementById('reset-step-3').style.display = 'none';
+      document.getElementById('reset-success').style.display = 'block';
+      
+      // In production, this would call your backend API
+      console.log('[Password Reset] Password updated for:', passwordResetEmail);
+    } else {
+      errorDiv.textContent = 'User not found. Please check your email.';
+      errorDiv.style.display = 'block';
+    }
+  } catch (e) {
+    console.error('[Password Reset] Error:', e);
+    errorDiv.textContent = 'Failed to reset password. Please try again.';
+    errorDiv.style.display = 'block';
+  }
 }
 
 function showErr(id, msg) {
@@ -460,14 +1147,142 @@ function setLoading(btnId, loading) {
 
 }
 
-function socialLogin(provider) {
+async function socialLogin(provider) {
+  // OAuth configuration (replace with your actual OAuth credentials)
+  const oauthConfig = {
+    google: {
+      clientId: 'YOUR_GOOGLE_CLIENT_ID',
+      authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+      scope: 'email profile',
+      redirectUri: window.location.origin + '/auth/google/callback'
+    },
+    facebook: {
+      appId: 'YOUR_FACEBOOK_APP_ID',
+      authUrl: 'https://www.facebook.com/v18.0/dialog/oauth',
+      scope: 'email public_profile',
+      redirectUri: window.location.origin + '/auth/facebook/callback'
+    },
+    apple: {
+      clientId: 'YOUR_APPLE_CLIENT_ID',
+      authUrl: 'https://appleid.apple.com/auth/authorize',
+      scope: 'email name',
+      redirectUri: window.location.origin + '/auth/apple/callback'
+    }
+  };
 
-  // Production: Implement proper OAuth integration
+  const config = oauthConfig[provider.toLowerCase()];
+  if (!config) {
+    showToast('❌ Unsupported provider');
+    return;
+  }
 
-  showSuccessState(`Signing in with ${provider}...`, null);
+  // For demo purposes, simulate social login
+  // In production, redirect to OAuth provider
+  await simulateSocialLogin(provider);
+}
 
-  // TODO: Integrate with real OAuth providers
+async function simulateSocialLogin(provider) {
+  // Demo: Simulate successful social login
+  const demoUsers = {
+    google: {
+      name: 'Google User',
+      firstName: 'Google',
+      email: 'user@gmail.com',
+      provider: 'google',
+      providerId: 'google_123456789'
+    },
+    facebook: {
+      name: 'Facebook User',
+      firstName: 'Facebook',
+      email: 'user@facebook.com',
+      provider: 'facebook',
+      providerId: 'facebook_987654321'
+    },
+    apple: {
+      name: 'Apple User',
+      firstName: 'Apple',
+      email: 'user@icloud.com',
+      provider: 'apple',
+      providerId: 'apple_456789123'
+    }
+  };
 
+  const user = demoUsers[provider.toLowerCase()];
+  if (user) {
+    // Check if user already exists
+    const registered = getRegisteredUsers();
+    const existingUser = registered.find(u => u.email === user.email);
+    
+    if (existingUser) {
+      // Login existing user
+      showSuccessState(`Welcome back, ${existingUser.firstName}!`, existingUser);
+    } else {
+      // Register new user from social login
+      const newUser = {
+        ...user,
+        password: await hashPassword('social_login_default_password'),
+        emailVerified: true,
+        twoFactorEnabled: false
+      };
+      registered.push(newUser);
+      try { sessionStorage.setItem('mh_reg_users', JSON.stringify(registered)); } catch (e) { }
+      showSuccessState(`Account created! Welcome, ${user.firstName}!`, newUser);
+    }
+  }
+}
+
+// Real OAuth implementation (for production use)
+function initiateGoogleOAuth() {
+  const config = {
+    client_id: 'YOUR_GOOGLE_CLIENT_ID',
+    redirect_uri: window.location.origin + '/auth/google/callback',
+    response_type: 'code',
+    scope: 'email profile',
+    state: generateOAuthState()
+  };
+  
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${new URLSearchParams(config)}`;
+  window.location.href = authUrl;
+}
+
+function initiateFacebookOAuth() {
+  const config = {
+    client_id: 'YOUR_FACEBOOK_APP_ID',
+    redirect_uri: window.location.origin + '/auth/facebook/callback',
+    response_type: 'code',
+    scope: 'email public_profile',
+    state: generateOAuthState()
+  };
+  
+  const authUrl = `https://www.facebook.com/v18.0/dialog/oauth?${new URLSearchParams(config)}`;
+  window.location.href = authUrl;
+}
+
+function initiateAppleOAuth() {
+  const config = {
+    client_id: 'YOUR_APPLE_CLIENT_ID',
+    redirect_uri: window.location.origin + '/auth/apple/callback',
+    response_type: 'code',
+    scope: 'email name',
+    state: generateOAuthState(),
+    response_mode: 'fragment'
+  };
+  
+  const authUrl = `https://appleid.apple.com/auth/authorize?${new URLSearchParams(config)}`;
+  window.location.href = authUrl;
+}
+
+function generateOAuthState() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
+// Handle OAuth callback (for production)
+function handleOAuthCallback(provider, code, state) {
+  // Validate state
+  // Exchange code for access token
+  // Get user profile from provider
+  // Create or login user
+  console.log('[OAuth] Handling callback for', provider, 'with code:', code);
 }
 
 
@@ -506,6 +1321,15 @@ async function doLogin() {
 
   if (!valid) return;
 
+  // Check rate limiting
+  if (isRateLimited(email)) {
+    const attempts = loginAttempts[email.toLowerCase()];
+    const remainingTime = Math.ceil((LOCKOUT_DURATION - (Date.now() - attempts.lastAttempt)) / 60000);
+    document.getElementById('login-email')?.classList.add('error');
+    showErr('login-email-err', `Too many failed attempts. Try again in ${remainingTime} minutes.`);
+    return;
+  }
+
   const btn = document.getElementById('login-submit-btn');
 
   btn.dataset.orig = 'Sign In';
@@ -513,15 +1337,19 @@ async function doLogin() {
   setLoading('login-submit-btn', true);
 
   try {
+    // Hash password for security
+    const hashedPassword = await hashPassword(password);
+    
     // Try backend login if available
     if (window.PatientAPI && window.PatientAPI.loginUser) {
-      const resp = await window.PatientAPI.loginUser({ email, password });
+      const resp = await window.PatientAPI.loginUser({ email, password: hashedPassword });
       if (resp && resp.ok && resp.data) {
         // Expect backend to return a user object in resp.data.user or resp.data
         const payload = resp.data.user || resp.data;
         if (payload && payload.email) {
           // store token if present
           if (resp.data.token) try { localStorage.setItem('mh_token', resp.data.token); } catch (e) { }
+          recordLoginAttempt(email, true);
           showSuccessState(`Welcome back, ${payload.firstName || payload.name || ''}!`, payload);
           return;
         }
@@ -531,6 +1359,7 @@ async function doLogin() {
         console.log('[Login] Backend unavailable, using local storage fallback');
       } else {
         // Backend is available but returned an error
+        recordLoginAttempt(email, false);
         const msg = (resp && resp.data && resp.data.message) ? resp.data.message : 'Incorrect email or password. Please try again.';
         document.getElementById('login-email')?.classList.add('error');
         document.getElementById('login-password')?.classList.add('error');
@@ -541,10 +1370,19 @@ async function doLogin() {
 
     // Fallback: local/session storage based auth (dev mode or backend down)
     const registered = getRegisteredUsers();
-    const found = registered.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    const found = registered.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === hashedPassword);
     if (found) {
-      showSuccessState(`Welcome back, ${found.firstName}!`, found);
+      recordLoginAttempt(email, true);
+      
+      // Check if 2FA is enabled for this user
+      if (found.twoFactorEnabled) {
+        closeLoginModal();
+        showTwoFactorVerificationModal(email, found);
+      } else {
+        showSuccessState(`Welcome back, ${found.firstName}!`, found);
+      }
     } else {
+      recordLoginAttempt(email, false);
       document.getElementById('login-email')?.classList.add('error');
       document.getElementById('login-password')?.classList.add('error');
       showErr('login-pw-err', 'Incorrect email or password. Please try again.');
@@ -552,6 +1390,7 @@ async function doLogin() {
 
   } catch (e) {
     console.error('[Login] Unexpected error:', e);
+    recordLoginAttempt(email, false);
     document.getElementById('login-email')?.classList.add('error');
     document.getElementById('login-password')?.classList.add('error');
     showErr('login-pw-err', 'Unable to sign in. Try again.');
@@ -589,7 +1428,13 @@ async function doRegister() {
 
   if (!phone || phone.length < 6) { document.getElementById('reg-phone')?.classList.add('error'); showErr('reg-phone-err', 'Enter a valid phone number'); valid = false; }
 
-  if (!password || password.length < 8) { document.getElementById('reg-password')?.classList.add('error'); showErr('reg-pw-err', 'Password must be at least 8 characters'); valid = false; }
+  // Strong password validation
+  const passwordValidation = validatePasswordStrength(password);
+  if (!passwordValidation.isValid) {
+    document.getElementById('reg-password')?.classList.add('error');
+    showErr('reg-pw-err', passwordValidation.errors[0]);
+    valid = false;
+  }
 
   if (!valid) return;
 
@@ -600,14 +1445,18 @@ async function doRegister() {
   setLoading('reg-submit-btn', true);
 
   try {
-    const newUser = { name: fname + ' ' + lname, firstName: fname, email, phone, password };
+    // Hash password for security
+    const hashedPassword = await hashPassword(password);
+    const newUser = { name: fname + ' ' + lname, firstName: fname, email, phone, password: hashedPassword, emailVerified: false };
     
     // Try backend registration if available
     if (window.PatientAPI && window.PatientAPI.registerUser) {
       const resp = await window.PatientAPI.registerUser(newUser);
       if (resp && resp.ok && resp.data) {
         const payload = resp.data.user || resp.data;
-        showSuccessState(`Account created! Welcome, ${fname}!`, payload || newUser);
+        // Store pending email for verification
+        pendingVerificationEmail = email;
+        showEmailVerificationState(fname, email);
         return;
       }
       // If backend failed, fall back to local storage instead of showing error
@@ -631,7 +1480,9 @@ async function doRegister() {
     }
     all.push(newUser);
     try { sessionStorage.setItem('mh_reg_users', JSON.stringify(all)); } catch (e) { }
-    showSuccessState(`Account created! Welcome, ${fname}!`, newUser);
+    // Store pending email for verification
+    pendingVerificationEmail = email;
+    showEmailVerificationState(fname, email);
 
   } catch (e) {
     console.error('[Registration] Unexpected error:', e);
@@ -647,15 +1498,68 @@ function getRegisteredUsers() {
   try { const d = sessionStorage.getItem('mh_reg_users'); return d ? JSON.parse(d) : []; } catch (e) { return []; }
 }
 
-/* ─── SUCCESS ─── */
-function showSuccessState(title, user) {
+/* ─── EMAIL VERIFICATION ─── */
+function showEmailVerificationState(name, email) {
   document.getElementById('lm-login-form').style.display = 'none';
   document.getElementById('lm-register-form').style.display = 'none';
   document.getElementById('lm-tabs').style.display = 'none';
   const ss = document.getElementById('lm-success-state');
   ss.style.display = 'flex';
+  document.getElementById('lm-success-title').textContent = 'Verify Your Email';
+  document.getElementById('lm-success-sub').textContent = `We've sent a verification link to ${email}. Please check your inbox and click the link to activate your account.`;
+  
+  // Add verification button
+  const existingBtn = document.getElementById('verify-email-btn');
+  if (!existingBtn) {
+    const verifyBtn = document.createElement('button');
+    verifyBtn.id = 'verify-email-btn';
+    verifyBtn.className = 'lm-submit';
+    verifyBtn.textContent = 'Resend Verification Email';
+    verifyBtn.style.marginTop = '1rem';
+    verifyBtn.onclick = resendVerificationEmail;
+    ss.appendChild(verifyBtn);
+  }
+}
+
+function resendVerificationEmail() {
+  if (pendingVerificationEmail) {
+    showToast('📧 Verification email resent!');
+    // In production, this would call your backend API
+    console.log('[Email Verification] Resending to:', pendingVerificationEmail);
+  }
+}
+
+function verifyEmailToken(token) {
+  // In production, this would validate the token with your backend
+  console.log('[Email Verification] Verifying token:', token);
+  // For demo purposes, auto-verify
+  if (pendingVerificationEmail) {
+    const all = getRegisteredUsers();
+    const user = all.find(u => u.email.toLowerCase() === pendingVerificationEmail.toLowerCase());
+    if (user) {
+      user.emailVerified = true;
+      try { sessionStorage.setItem('mh_reg_users', JSON.stringify(all)); } catch (e) { }
+      pendingVerificationEmail = null;
+      showToast('✅ Email verified successfully!');
+      showSuccessState(`Account verified! Welcome, ${user.firstName}!`, user);
+    }
+  }
+}
+
+/* ─── SUCCESS ─── */
+function showSuccessState(title, user) {
+  document.getElementById('lm-login-form').style.display = 'none';
+  document.getElementById('lm-register-form').style.display = 'none';
+  document.getElementById('lm-tabs').style.display = 'none';
+  
+  // Remove verification button if exists
+  const verifyBtn = document.getElementById('verify-email-btn');
+  if (verifyBtn) verifyBtn.remove();
+  
+  const ss = document.getElementById('lm-success-state');
+  ss.style.display = 'flex';
   document.getElementById('lm-success-title').textContent = title;
-  document.getElementById('lm-success-sub').textContent = 'Appointment booking successful!';
+  document.getElementById('lm-success-sub').textContent = 'You can now access your patient portal.';
   saveUser(user);
   renderNavAuth();
   setTimeout(() => {
