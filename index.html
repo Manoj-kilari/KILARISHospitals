@@ -1365,28 +1365,31 @@
     <div id="appt-overlay" class="modal" style="display:none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Book Appointment</h3>
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <span style="font-size:1.8rem;">📅</span>
+                    <h3>Book Appointment</h3>
+                </div>
                 <button class="modal-close" onclick="closeAppointmentBooking()">✕</button>
             </div>
             <div class="modal-body">
                 <form id="appt-form">
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                         <div>
-                            <label class="appointment-label">Full Name *</label>
+                            <label class="appointment-label">👤 Full Name *</label>
                             <input class="appointment-input" id="appt-name" type="text" placeholder="Enter full name" required>
                         </div>
                         <div>
-                            <label class="appointment-label">Phone *</label>
+                            <label class="appointment-label">📞 Phone *</label>
                             <input class="appointment-input" id="appt-phone" type="tel" placeholder="+91 98765 43210" required>
                         </div>
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;">
                         <div>
-                            <label class="appointment-label">Date *</label>
+                            <label class="appointment-label">📆 Date *</label>
                             <input class="appointment-input" id="appt-date" type="date" required>
                         </div>
                         <div>
-                            <label class="appointment-label">Time *</label>
+                            <label class="appointment-label">⏰ Time *</label>
                             <select class="appointment-input" id="appt-time" required>
                                 <option value="">Select time</option>
                                 <option>10:00 AM</option>
@@ -1405,32 +1408,33 @@
                         </div>
                     </div>
                     <div style="margin-top:1rem;">
-                        <label class="appointment-label">Department *</label>
+                        <label class="appointment-label">🏥 Department *</label>
                         <select class="appointment-input" id="appt-dept" required>
                             <option value="">Select department</option>
-                            <option>Cardiology</option>
-                            <option>Neurology</option>
-                            <option>Orthopedics</option>
-                            <option>Oncology</option>
-                            <option>Pediatrics</option>
-                            <option>General Medicine</option>
-                            <option>Dermatology</option>
-                            <option>Gynaecology</option>
+                            <option>❤️ Cardiology</option>
+                            <option>🧠 Neurology</option>
+                            <option>🦴 Orthopedics</option>
+                            <option>🔬 Oncology</option>
+                            <option>👶 Pediatrics</option>
+                            <option>🩺 General Medicine</option>
+                            <option>💆 Dermatology</option>
+                            <option>🤱 Gynaecology</option>
                         </select>
                     </div>
                     <div style="margin-top:1rem;">
-                        <label class="appointment-label">Reason (optional)</label>
-                        <textarea class="appointment-input appointment-textarea" id="appt-reason" rows="3" placeholder="Briefly describe your symptoms / reason"></textarea>
+                        <label class="appointment-label">📝 Reason (optional)</label>
+                        <textarea class="appointment-input appointment-textarea" id="appt-reason" rows="3" placeholder="Briefly describe your symptoms / reason for visit"></textarea>
                     </div>
-                    <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.2rem;">
+                    <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--light);">
                         <button type="button" class="btn-secondary" onclick="closeAppointmentBooking()">Cancel</button>
-                        <button type="submit" class="btn-primary">Confirm</button>
+                        <button type="submit" class="btn-primary">✓ Confirm Appointment</button>
                     </div>
                 </form>
                 <div id="appt-success" style="display:none;">
-                    <div style="font-weight:800;color:var(--text);font-size:1.15rem;margin-bottom:.35rem;">Appointment booked!</div>
-                    <div style="color:var(--subtext);line-height:1.6;">We saved your booking. Our team will contact you shortly.</div>
-                    <div style="margin-top:1rem;display:flex;justify-content:flex-end;">
+                    <div style="font-size:3rem;margin-bottom:1rem;">✅</div>
+                    <div style="font-weight:800;color:var(--text);font-size:1.3rem;margin-bottom:0.5rem;">Appointment Booked Successfully!</div>
+                    <div style="color:var(--subtext);line-height:1.7;">We've saved your booking. Our team will contact you shortly to confirm your appointment details.</div>
+                    <div style="margin-top:1.5rem;display:flex;justify-content:center;">
                         <button class="btn-primary" onclick="closeAppointmentBooking()">Close</button>
                     </div>
                 </div>
