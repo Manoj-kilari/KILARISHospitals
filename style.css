@@ -12665,3 +12665,141 @@ nav.scrolled {
         background: var(--dark2);
     }
 }
+
+
+
+/* ═══════════════════════════════════════════════════
+
+   APPOINTMENT BOOKING MODAL STYLES
+
+   ═══════════════════════════════════════════════════ */
+
+.appointment-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.appointment-input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 2px solid var(--light);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    font-family: var(--font-b);
+}
+
+.appointment-input:focus {
+    outline: none;
+    border-color: var(--blue);
+    background: white;
+    box-shadow: 0 4px 15px rgba(0, 87, 168, 0.15);
+    transform: translateY(-2px);
+}
+
+.appointment-input::placeholder {
+    color: var(--muted);
+    font-style: italic;
+}
+
+.appointment-textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+}
+
+/* Enhanced appointment modal header */
+#appt-overlay .modal-header {
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+    padding: 1.75rem 2rem;
+}
+
+#appt-overlay .modal-header h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Enhanced appointment form container */
+#appt-form {
+    padding: 0.5rem 0;
+}
+
+#appt-form > div {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+#appt-form > div:nth-child(1) { animation-delay: 0.1s; }
+#appt-form > div:nth-child(2) { animation-delay: 0.2s; }
+#appt-form > div:nth-child(3) { animation-delay: 0.3s; }
+#appt-form > div:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Success message styling */
+#appt-success {
+    text-align: center;
+    padding: 2rem;
+    animation: scaleIn 0.4s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#appt-success > div:first-child {
+    font-size: 1.5rem;
+    color: var(--teal);
+    margin-bottom: 0.75rem;
+}
+
+#appt-success > div:nth-child(2) {
+    font-size: 1rem;
+    color: var(--subtext);
+    line-height: 1.7;
+}
+
+/* Mobile responsive */
+@media only screen and (max-width: 768px) {
+    #appt-overlay .modal-content {
+        margin: 1rem;
+        width: 95%;
+    }
+
+    #appt-form > div[style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+    }
+
+    .appointment-label {
+        font-size: 0.85rem;
+    }
+
+    .appointment-input {
+        padding: 0.75rem 0.9rem;
+        font-size: 0.9rem;
+    }
+}
